@@ -1,0 +1,193 @@
+header {
+  text-align: center;
+  padding: 20px 0;
+  background-color: #fff;
+}
+
+.goSocialMedia {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.goSocialMedia a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.social-icon {
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo img {
+  width: 300px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.row_left,
+.row_right {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+.row_right {
+  display: none;
+}
+@media (min-width: 768px) {
+  .row_right {
+    display: flex;
+  }
+}
+.row_mid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Search form styles */
+.d-flex {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+
+.form-control {
+  padding: 0 6px;
+  padding-right: 35px;
+  width: 100%;
+  max-width: 300px;
+  height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #d56387;
+  box-shadow: 0 0 0 2px rgba(213, 99, 135, 0.1);
+}
+
+.d-flex button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  position: absolute;
+  right: 0px;
+  top: 1px;
+  /* transform: translateY(-50%); */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d56387;
+}
+
+.d-flex button svg {
+  width: 20px;
+  height: 20px;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.d-flex button:hover svg {
+  color: #d56387;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.col-sm-2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #d56387;
+  color: #fff;
+  height: 75%;
+  border-radius: 25%;
+}
+
+.col-sm-2 svg {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 24px;
+  height: 24px;
+}
+
+.col-sm-2 svg:hover {
+  color: #fff;
+  transform: scale(1.25);
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .logo img {
+    width: 250px;
+  }
+
+  .form-control {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 15px 0;
+  }
+
+  .logo img {
+    width: 200px;
+  }
+
+  .goSocialMedia {
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .social-icon {
+    font-size: 24px;
+  }
+
+  .form-control {
+    max-width: 200px;
+    font-size: 12px;
+  }
+
+  .row_left,
+  .row_right {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .logo img {
+    width: 150px;
+  }
+
+  .form-control {
+    max-width: 150px;
+  }
+
+  .social-icon {
+    font-size: 20px;
+  }
+}

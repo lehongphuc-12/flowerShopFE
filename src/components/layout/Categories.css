@@ -1,0 +1,25 @@
+.dropdown-toggle::after {
+  display: none !important;
+}
+.navbar-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  flex-wrap: wrap;
+  border: 1px;
+  text-transform: uppercase;
+}
+.nav-item {
+  padding: 10px 15px;
+}
+.nav-item a {
+  padding: 0 !important;
+  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.nav-item a:hover {
+  color: #d56387 !important;
+  cursor: pointer;
+  transform: scale(1.15);
+}

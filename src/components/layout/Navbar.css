@@ -1,0 +1,93 @@
+#top {
+  color: black;
+  background-color: #fff;
+  height: 40px;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  margin-bottom: 20px;
+}
+
+#top .container {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+#top .nav {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+#top .float-left {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+#top .float-right {
+  margin-left: auto;
+}
+
+#top .list-inline {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 6px;
+  align-items: center;
+  height: 100%;
+}
+
+#top .list-inline-item {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+#top a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: black;
+  padding: 8px 2px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+  height: 100%;
+}
+
+#top a:hover {
+  background-color: rgba(213, 99, 135, 0.1);
+  color: #d56387;
+  transform: translateY(-1px);
+}
+
+#top a svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+#top a span {
+  white-space: nowrap;
+}
+
+#top .nav-icon {
+  height: 24px;
+  width: auto;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  #top span {
+    display: none;
+  }
+}
