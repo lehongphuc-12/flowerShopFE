@@ -1,0 +1,25 @@
+#metu {
+  background-color: #e91e63;
+  line-height: 48px;
+  display: flex;
+  justify-content: center;
+}
+#metu div {
+  padding: 0 22px;
+}
+#metu a {
+  display: inline-flex; /* hoặc flex nếu muốn chiếm toàn width */
+  align-items: center; /* canh icon và text cùng hàng */
+  gap: 8px; /* khoảng cách icon và chữ */
+  color: #fff !important;
+}
+#metu .metu-mid {
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+.icon-zalo {
+  color: #fff; /* màu giống các icon kia */
+  width: 24px; /* chiều ngang */
+  height: 24px; /* chiều cao */
+  flex-shrink: 0; /* giữ kích thước không bị co */
+}

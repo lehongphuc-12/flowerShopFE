@@ -15,6 +15,7 @@
 }
 .nav-item a {
   padding: 0 !important;
+  color: black;
   transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
