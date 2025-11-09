@@ -3,7 +3,6 @@ header {
   padding: 20px 0;
   background-color: #fff;
 }
-
 .goSocialMedia {
   display: flex;
   gap: 15px;
@@ -86,6 +85,31 @@ header {
   box-shadow: 0 0 0 2px rgba(213, 99, 135, 0.1);
 }
 
+/* Style riêng cho input trong row_right */
+.row_right .form-control {
+  padding: 0 16px;
+  padding-right: 45px;
+  height: 44px;
+  border: 1px solid #e0e0e0;
+  border-radius: 22px;
+  background-color: #f8f9fa;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.row_right .form-control:focus {
+  outline: none;
+  border-color: #d56387;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(213, 99, 135, 0.15), 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.row_right .form-control::placeholder {
+  color: #999;
+  font-size: 13px;
+}
+
 .d-flex button {
   background: none;
   border: none;
@@ -109,6 +133,34 @@ header {
 }
 
 .d-flex button:hover svg {
+  color: #d56387;
+}
+
+/* Style button search trong row_right */
+.row_right .d-flex button {
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.row_right .d-flex button:hover {
+  background-color: rgba(213, 99, 135, 0.1);
+}
+
+.row_right .d-flex button svg,
+.row_right .search-icon {
+  width: 18px;
+  height: 18px;
+  color: #666;
+}
+
+.row_right .d-flex button:hover svg,
+.row_right .d-flex button:hover .search-icon {
   color: #d56387;
 }
 
@@ -147,6 +199,12 @@ header {
   .form-control {
     max-width: 250px;
   }
+
+  .row_right .form-control {
+    height: 42px;
+    padding: 0 14px;
+    padding-right: 42px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -172,6 +230,25 @@ header {
     font-size: 12px;
   }
 
+  .row_right .form-control {
+    height: 40px;
+    padding: 0 12px;
+    padding-right: 38px;
+    font-size: 13px;
+    border-radius: 20px;
+  }
+
+  .row_right .d-flex button {
+    width: 28px;
+    height: 28px;
+    right: 5px;
+  }
+
+  .row_right .search-icon {
+    width: 16px;
+    height: 16px;
+  }
+
   .row_left,
   .row_right {
     justify-content: center;
@@ -185,6 +262,25 @@ header {
 
   .form-control {
     max-width: 150px;
+  }
+
+  .row_right .form-control {
+    height: 38px;
+    padding: 0 10px;
+    padding-right: 35px;
+    font-size: 12px;
+    border-radius: 19px;
+  }
+
+  .row_right .d-flex button {
+    width: 26px;
+    height: 26px;
+    right: 4px;
+  }
+
+  .row_right .search-icon {
+    width: 14px;
+    height: 14px;
   }
 
   .social-icon {

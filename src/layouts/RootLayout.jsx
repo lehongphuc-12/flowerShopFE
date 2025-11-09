@@ -7,7 +7,7 @@ import Metu from "../components/layout/Metu.jsx";
 
 const RootLayout = () => {
   return (
-    <div>
+    <div className="rootLayout">
       <Navbar />
       <Header />
       <Categories />

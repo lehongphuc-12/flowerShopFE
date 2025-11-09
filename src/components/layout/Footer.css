@@ -2,7 +2,7 @@
   background-color: #fcfcfc;
   margin-top: 30px;
   padding-top: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 50px;
   border-top: 1px solid #ddd;
 }
 
@@ -20,6 +20,7 @@
 .footer-content {
   display: flex;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 .footer-content > div {
   padding: 0 20px;

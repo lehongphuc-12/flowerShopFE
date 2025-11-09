@@ -53,30 +53,17 @@ const Header = () => {
                   type="search"
                   placeholder="Search"
                   aria-label="Search"
-                  style={{
-                    padding: "0px 6px",
-                    paddingRight: "35px",
-                    width: "300px",
-                    // position: "absolute",
-                    height: "40px",
-                  }}
                 />
-                <button>
+                <button type="button">
                   <FontAwesomeIcon
                     icon={faMagnifyingGlass}
-                    style={{
-                      lineHeight: "20px",
-                      height: "20px",
-                      position: "absolute",
-                      right: "25px",
-                      top: "8px",
-                    }}
+                    className="search-icon"
                   />
                 </button>
               </form>
             </div>
-            <div className="col-sm-2">
-              <div className="">
+            <div className="col-sm-2 cart-icon-wrapper">
+              <div className="cart-icon-container">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
