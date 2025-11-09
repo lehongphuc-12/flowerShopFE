@@ -3,23 +3,62 @@
   line-height: 48px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 #metu div {
-  padding: 0 22px;
+  padding: 0 20px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #metu a {
-  display: inline-flex; /* hoặc flex nếu muốn chiếm toàn width */
-  align-items: center; /* canh icon và text cùng hàng */
-  gap: 8px; /* khoảng cách icon và chữ */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: #fff !important;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+#metu a:hover {
+  opacity: 0.8;
 }
 #metu .metu-mid {
-  border-left: 1px solid black;
-  border-right: 1px solid black;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
 }
 .icon-zalo {
-  color: #fff; /* màu giống các icon kia */
-  width: 24px; /* chiều ngang */
-  height: 24px; /* chiều cao */
-  flex-shrink: 0; /* giữ kích thước không bị co */
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+#metu svg[data-icon] {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 576px) {
+  #metu div {
+    padding: 0 10px;
+  }
+  #metu a span {
+    font-size: 12px;
+  }
+  .icon-zalo {
+    width: 20px;
+    height: 20px;
+  }
+  #metu svg[data-icon] {
+    width: 18px;
+    height: 18px;
+  }
 }
