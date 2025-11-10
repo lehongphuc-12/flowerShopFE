@@ -3,7 +3,7 @@ import "./Categories.css";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 const Categories = () => {
   return (
-    <div className="container">
+    <div className="container" style={{ position: "sticky", top: "0" }}>
       <nav class="navbar navbar-expand-lg ">
         <div
           class="container-fluid"
