@@ -17,13 +17,12 @@
 .nav-item a {
   padding: 0 !important;
   color: black;
-  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition: font-size 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
 .nav-item a:hover {
   color: #d56387 !important;
   cursor: pointer;
-  transform: scale(1.15);
 }
 
 /* Dropdown menu styles */
@@ -72,7 +71,7 @@
 }
 
 .dropdown-item:hover {
-  background-color: #f8f9fa;
+  background-color: #fff;
   border-left-color: #d56387;
 }
 

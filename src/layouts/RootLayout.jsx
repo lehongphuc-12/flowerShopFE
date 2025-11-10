@@ -11,6 +11,18 @@ const RootLayout = () => {
       <Navbar />
       <Header />
       <Categories />
+      <div
+        className="hotline"
+        style={{
+          padding: "6px",
+          textAlign: "center",
+          color: "#ff3b3d",
+          textTransform: "uppercase",
+          fontWeight: "600",
+        }}
+      >
+        Hotline: 0788580223
+      </div>
       <div className="">
         <Outlet />
       </div>

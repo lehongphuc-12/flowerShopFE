@@ -24,11 +24,23 @@ const Categories = () => {
   ];
 
   return (
-    <div className="container" style={{ position: "sticky", top: "0" }}>
-      <nav className="navbar navbar-expand-lg ">
+    <div
+      className="container"
+      style={{
+        position: "sticky",
+        top: "0",
+        zIndex: "1000",
+        background: "#fff",
+      }}
+    >
+      <nav className="navbar navbar-expand-lg " style={{ padding: "0px" }}>
         <div
           className="container-fluid"
-          style={{ display: "flex", justifyContent: "center" }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            borderBottom: "1px solid #ddd",
+          }}
         >
           <button
             className="navbar-toggler"
