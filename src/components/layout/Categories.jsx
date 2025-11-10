@@ -1,12 +1,33 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Categories.css";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { topics, Design, flowerTypes } from "../../data/CategoriesData";
+
 const Categories = () => {
+  // Kết hợp tất cả các categories
+  const allCategories = [
+    { id: 1, name: "Chủ đề", children: topics },
+    {
+      id: 2,
+      name: "Hoa sinh nhật",
+      children: topics.find((item) => item.id === 1)?.children || [],
+    },
+    {
+      id: 3,
+      name: "Hoa chúc mừng",
+      children: topics.find((item) => item.id === 2)?.children || [],
+    },
+    { id: 4, name: "Thiết kế", children: Design },
+    { id: 5, name: "HOA TƯƠI", children: flowerTypes },
+    { id: 6, name: "Hoa Tươi Giảm Giá" },
+    { id: 7, name: "Best seler" },
+  ];
+
   return (
     <div className="container" style={{ position: "sticky", top: "0" }}>
-      <nav class="navbar navbar-expand-lg ">
+      <nav className="navbar navbar-expand-lg ">
         <div
-          class="container-fluid"
+          className="container-fluid"
           style={{ display: "flex", justifyContent: "center" }}
         >
           <button
@@ -17,29 +38,27 @@ const Categories = () => {
           >
             <FontAwesomeIcon icon={faBars} />
           </button>
-          <div class="collapse navbar-collapse categories">
-            <ul class="navbar-nav">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle">Hoa sinh nhật</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle">Hoa Khai Trương</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle">Chủ Đề</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle">Thiết kế</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle">HOA TƯƠI</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle">Hoa Tươi Giảm Giá</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle">Best seler</a>
-              </li>
+          <div className="collapse navbar-collapse categories">
+            <ul className="navbar-nav">
+              {allCategories.map((category) => (
+                <li
+                  key={category.id}
+                  className={`nav-item dropdown ${
+                    category.children ? "has-children" : ""
+                  }`}
+                >
+                  <a className="nav-link">{category.name}</a>
+                  {category.children && category.children.length > 0 && (
+                    <ul className="dropdown-menu">
+                      {category.children.map((child) => (
+                        <li key={child.id}>
+                          <a className="dropdown-item">{child.name}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
