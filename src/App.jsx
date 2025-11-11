@@ -6,13 +6,24 @@ import {
 } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout.jsx";
 import Home from "./pages/Home.jsx";
+import Login from "./pages/Login.jsx";
+import LoginLayout from "./layouts/LoginLayout.jsx";
+import Register from "./pages/Register.jsx";
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/" element={<RootLayout />}>
-        <Route index element={<Home />} />
-      </Route>
+      <>
+        <Route path="/" element={<RootLayout />}>
+          <Route index element={<Home />} />
+        </Route>
+        <Route path="/login" element={<LoginLayout />}>
+          <Route index element={<Login />} />
+        </Route>
+        <Route path="/register" element={<LoginLayout />}>
+          <Route index element={<Register />} />
+        </Route>
+      </>
     )
   );
 

@@ -8,7 +8,7 @@ function Navbar() {
         <div className="nav float-right">
           <ul className="list-inline">
             <li className="list-inline-item">
-              <a href="">
+              <a href="\login">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
