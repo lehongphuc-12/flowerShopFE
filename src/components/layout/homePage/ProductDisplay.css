@@ -1,0 +1,30 @@
+.productDisplay {
+  text-align: center;
+}
+.productDisplay h4 {
+  text-transform: uppercase;
+  margin: 24px;
+}
+
+.productDisplay .row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+  .productDisplay .row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 0 10px;
+  }
+}
+
+/* @media (max-width: 480px) {
+  .productDisplay .row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+} */
