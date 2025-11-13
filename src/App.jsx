@@ -9,6 +9,7 @@ import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import LoginLayout from "./layouts/LoginLayout.jsx";
 import Register from "./pages/Register.jsx";
+import Categories from "./pages/Categories.jsx";
 
 function App() {
   const router = createBrowserRouter(
@@ -16,6 +17,7 @@ function App() {
       <>
         <Route path="/" element={<RootLayout />}>
           <Route index element={<Home />} />
+          <Route path="categories" element={<Categories />} />
         </Route>
         <Route path="/login" element={<LoginLayout />}>
           <Route index element={<Login />} />

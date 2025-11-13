@@ -1,5 +1,3 @@
-import { Children } from "react";
-
 export const topics = [
   {
     id: 1,
@@ -37,4 +35,20 @@ export const flowerTypes = [
   { id: 1, name: "Hoa hồng" },
   { id: 2, name: "Hoa ly" },
   { id: 3, name: "Hoa cúc" },
+  { id: 4, name: "Hoa tulip" },
+  { id: 5, name: "Hoa lan" },
+  { id: 6, name: "Hoa baby" },
+  { id: 7, name: "Hoa mẫu đơn" },
+  { id: 8, name: "Hoa cẩm chướng" },
+  { id: 9, name: "Hoa hướng dương" },
+  { id: 10, name: "Hoa đồng tiền" },
+];
+
+export const flowerColors = [
+  { id: 1, name: "Đỏ", value: "đỏ" },
+  { id: 2, name: "Hồng", value: "hồng" },
+  { id: 3, name: "Trắng", value: "trắng" },
+  { id: 4, name: "Vàng", value: "vàng" },
+  { id: 5, name: "Tím", value: "tím" },
+  { id: 6, name: "Mix/Nhiều màu", value: "mix" },
 ];

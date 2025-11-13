@@ -1,0 +1,32 @@
+.content {
+  padding: 20px 0;
+}
+
+.content-main {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.content-main-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.content h4 {
+  text-transform: uppercase;
+  margin: 10px 0px;
+  border-bottom: 1px solid #e91e63;
+  display: inline-block;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .content-main {
+    grid-template-columns: 1fr;
+  }
+}
