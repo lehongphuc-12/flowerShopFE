@@ -59,12 +59,16 @@ const Categories = () => {
                     category.children ? "has-children" : ""
                   }`}
                 >
-                  <a className="nav-link">{category.name}</a>
+                  <a className="nav-link" href="/categories">
+                    {category.name}
+                  </a>
                   {category.children && category.children.length > 0 && (
                     <ul className="dropdown-menu">
                       {category.children.map((child) => (
                         <li key={child.id}>
-                          <a className="dropdown-item">{child.name}</a>
+                          <a className="dropdown-item" href="/categories">
+                            {child.name}
+                          </a>
                         </li>
                       ))}
                     </ul>
