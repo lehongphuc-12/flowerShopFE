@@ -80,7 +80,9 @@ const Cart = () => {
           </tfoot>
         </table>
         <div className="buttons">
-          <button>Tiếp tục mua sắm</button>
+          <button>
+            <a href="/categories">Tiếp tục mua sắm</a>
+          </button>
           <button>Thanh toán</button>
         </div>
       </div>
