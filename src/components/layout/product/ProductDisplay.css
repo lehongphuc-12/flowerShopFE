@@ -12,6 +12,20 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 0 20px;
+  align-items: stretch;
+}
+
+.productDisplay .flex-row {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: stretch;
+}
+.productDisplay .flex-row > * {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 25%;
 }
 
 @media (max-width: 768px) {

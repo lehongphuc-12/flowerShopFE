@@ -1,0 +1,133 @@
+/* Product detail grid */
+.product-detail-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 36px;
+  margin-top: 16px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 40px 0 rgba(0,0,0,.08);
+  padding: 32px 20px;
+  align-items: flex-start;
+}
+.product-detail-image-box {
+  flex: 1 1 350px;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.main-product-image {
+  width: 100%;
+  max-width: 390px;
+  height: 390px;
+  object-fit: cover;
+  border-radius: 16px;
+  background:#f9f9f9;
+}
+.product-detail-info {
+  flex: 2 1 380px;
+  min-width: 270px;
+}
+.product-detail-info h1 {
+  font-size: 2.1rem;
+  color: #ba2649;
+  margin-bottom: 18px;
+}
+.product-desc {
+  color: #494747;
+  font-size: 1.07rem;
+  margin-bottom: 18px;
+}
+.price-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.product-final-price {
+  font-size: 2rem;
+  color: #e91e63;
+  font-weight: 700;
+}
+.product-original-price {
+  font-size:1.2rem;
+  color:#888;
+  text-decoration: line-through;
+}
+.product-discount {
+  font-size:1.2rem;
+  color:#1eca6e;
+  font-weight:600;
+  padding-left:6px;
+}
+.orderBox form {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin: 25px 0;
+}
+.orderBox label {
+  margin-right: 8px;
+  font-weight: 500;
+}
+.orderBox input[type="number"] {
+  width: 70px;
+  padding: 7px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.orderBox .btn-primary {
+  padding: 9px 22px;
+  font-size: 1rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+.orderBox .btn-primary:hover {
+  background: linear-gradient(135deg, #c2185b 0%, #ad1457 100%);
+}
+.buy-in-store {
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+.ship-item {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #f7f7f7;
+  border-radius: 9px;
+  padding: 10px 14px;
+  font-size:1.02rem;
+  margin-bottom: 13px;
+}
+.ship-phone a, .ship-map a {
+  color: #ba2649;
+  text-decoration: none;
+  font-weight: 600;
+}
+.back-link {
+  margin-bottom: 8px;
+  font-size: 1.03rem;
+}
+
+.swiper-button-next svg, .swiper-button-prev svg {
+  color: #fff;
+}
+.swiper-button-next:hover svg {
+  color: #e91e63;
+} 
+.swiper-button-prev:hover svg {
+  color: #e91e63;
+}
+.swiper-button-disabled {
+  display: none !important;
+
+}
+.related-products {
+  margin-top: 24px;
+}
