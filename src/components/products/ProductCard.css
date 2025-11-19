@@ -4,6 +4,7 @@
   display: block;
   width: 100%;
   height: 100%;
+  /* Đảm bảo card-link fill full height card */
 }
 
 .product-card {
@@ -12,6 +13,10 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  min-height: 390px;
+  /* ép đồng đều chiều cao (ảnh cao 250px + title + price + btn) */
+  background: #fff;
+  text-align: center;
 }
 
 .product-card:hover {
@@ -27,11 +32,11 @@
 
 .product-card h5 {
   margin: 12px 16px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #333;
   line-height: 1.4;
-  min-height: 30px;
+  min-height: 26px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -43,18 +48,18 @@
   display: flex;
   justify-content: center;
   gap: 5px;
-  margin-top: auto;
+  margin-top: auto; /* đẩy price-container xuống sát đáy trước nút bấm */
 }
 
 .product-card .original-price {
-  font-size: 14px;
+  font-size: 12px;
   color: #999;
   text-decoration: line-through;
   margin: 0;
 }
 
 .product-card .final-price {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
   color: #e91e63;
   margin: 0;
@@ -62,12 +67,12 @@
 
 .add-to-cart-btn {
   margin: 12px 16px 16px;
-  padding: 10px 16px;
+  padding: 8px 12px;
   background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   display: flex;

@@ -16,7 +16,7 @@ export default function ProductCard({ product }) {
 
   return (
     <Card>
-      <Link to={``} className="product-card-link">
+      <Link to={`/product/${id}`} className="product-card-link">
         <div className="product-card">
           <img src={product.url} alt={name} />
 
