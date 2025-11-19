@@ -1,0 +1,176 @@
+/* .container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #0001;
+} */
+
+.content h4 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+thead tr {
+  background: #f0f2f5;
+}
+
+th,
+td {
+  padding: 12px 10px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+th {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+tbody tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+tfoot tr:first-child td,
+tfoot tr:last-child td {
+  background: #f7f7fa;
+  font-weight: bold;
+  font-size: 1.05rem;
+}
+
+tfoot td {
+  text-align: right;
+}
+
+td img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px #aaa3;
+}
+
+/* Bảng tổng thể viền xám giống border gốc */
+table,
+th,
+td {
+  border: 1px solid #c6c6c6ff;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+}
+
+.input-group input[type="text"] {
+  flex: 1 1 0%;
+  min-width: 40px;
+  max-width: 60px;
+  width: auto;
+  height: 34px;
+  text-align: center;
+  border: 1px solid #bbb;
+  background: #fff;
+  border-radius: 8px;
+  outline: none;
+  font-size: 1.06rem;
+  padding: 0 8px;
+  margin-right: 2px;
+  transition: border 0.2s;
+  box-sizing: border-box;
+}
+
+.input-group input[type="text"]:focus {
+  border: 2px solid #36bb6b;
+  background: #f8fffa;
+}
+
+.input-group button {
+  background: #f7f7fa;
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  margin: 0 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  font-size: 1.15rem;
+  color: #509589;
+}
+
+.input-group button:hover {
+  background: #e6fcf6;
+  color: #36bb6b;
+}
+
+.input-group button:active {
+  background: #d4e9e2;
+}
+
+.product-name-cell {
+  width: 25%;
+}
+
+td.price-cell,
+td.total-cell,
+tfoot td {
+  text-align: right;
+}
+
+th.price-cell,
+th.total-cell {
+  text-align: right;
+}
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  gap: 20px;
+}
+
+.buttons button {
+  padding: 12px 26px;
+  border-radius: 8px;
+  border: 2px solid #bfbfbf;
+  font-size: 1.06rem;
+  font-weight: 600;
+  background: #fff;
+  color: #484848;
+  box-shadow: 0 2px 8px #0001;
+  cursor: pointer;
+  transition: background 0.16s, color 0.13s, border 0.16s, box-shadow 0.16s;
+}
+
+.buttons button:first-child:hover {
+  background: #f4f4f7;
+  color: #222;
+  border-color: #aaa;
+}
+
+.buttons button:last-child {
+  background: linear-gradient(92deg, #20ca73 75%, #43fd9e 100%);
+  color: #fff;
+  border-color: #18a95f;
+  box-shadow: 0 4px 16px #37e1bb21;
+}
+
+.buttons button:last-child:hover {
+  background: linear-gradient(80deg, #18a95f 68%, #26c68c 100%);
+  color: #fff;
+  border-color: #139256;
+  box-shadow: 0 4px 24px #37e1bb40;
+}

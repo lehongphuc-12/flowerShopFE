@@ -28,7 +28,7 @@ function Navbar() {
               </a>
             </li>
             <li className="list-inline-item">
-              <a href="">
+              <a href="/cart">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
