@@ -5,7 +5,10 @@ import {
   faInstagram,
   faTiktok,
 } from "@fortawesome/free-brands-svg-icons";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBagShopping,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Header = () => {
   return (
@@ -62,8 +65,12 @@ const Header = () => {
                 </button>
               </form>
             </div>
-            <div className="col-sm-2 cart-icon-wrapper">
-              <div className="cart-icon-container">
+            <div className="col-sm-2 cart-icon-wrapper dropdown">
+              <div
+                className="cart-icon-container dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -79,6 +86,56 @@ const Header = () => {
                   />
                 </svg>
               </div>
+              <ul
+                class="dropdown-menu menu-cart"
+                aria-labelledby="dropdownMenuButton1"
+              >
+                <li>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <img
+                            src="https://via.placeholder.com/36"
+                            width="36"
+                            alt="Example1"
+                          />
+                        </td>
+                        <td className="product-name">Hoa Hồng Đỏ</td>
+                        <td>2</td>
+                        <td className="price">180,000₫</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <img
+                            src="https://via.placeholder.com/36/ffc1e3/803655"
+                            width="36"
+                            alt="Example2"
+                          />
+                        </td>
+                        <td className="product-name">Hoa Baby Xanh</td>
+                        <td>1</td>
+                        <td className="price">90,000₫</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr className="tong-tien">
+                        <td colSpan="3">Tổng Tiền</td>
+                        <td className="tong-tien-value">270,000₫</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </li>
+
+                <li className="button-group">
+                  <button>
+                    <a href="/Cart">Giỏ hàng</a>
+                  </button>
+                  <button>
+                    <a href="">Thanh toán</a>
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
