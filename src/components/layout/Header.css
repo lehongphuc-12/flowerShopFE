@@ -54,6 +54,9 @@ header {
     display: flex;
   }
 }
+.dropdown-menu {
+  z-index: 1001;
+}
 .row_mid {
   display: flex;
   justify-content: center;
@@ -286,4 +289,27 @@ header {
   .social-icon {
     font-size: 20px;
   }
+}
+.menu-cart {
+  min-width: 427px;
+  font-size: 12px;
+}
+.menu-cart table {
+  border: none;
+}
+.menu-cart table td {
+  border: none;
+  font-size: 12px !important;
+}
+.menu-cart .price {
+  text-align: right;
+}
+.button-group {
+  display: flex;
+  justify-content: right;
+  gap: 10px;
+}
+.button-group button {
+  background-color: #fff !important;
+  border: none;
 }
