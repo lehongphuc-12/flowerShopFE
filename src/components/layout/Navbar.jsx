@@ -1,6 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../layout/Navbar.css";
 function Navbar() {
+  const [user, setUser] = useState(null); // null: chưa fetch, false: chưa đăng nhập, {username} đã đăng nhập
+
+  useEffect(() => {
+    // Gọi API profile (bạn tự điền/đổi URL sau nếu cần)
+    fetch("http://localhost:8080/api/users/profile", {
+      method: "GET",
+      credentials: "include", // gửi cookie
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if(data.fullName) {
+          console.log(data);
+          setUser(data);
+        } else {
+          setUser(false);
+        }
+      })
+      .catch(() => setUser(false));
+  }, []);
+  function logOutHandle() {
+    fetch("http://localhost:8080/api/users/profile", {
+      method : "GET",
+      credentials: "include",
+    })
+    .then(() => {
+      setUser(false);
+      window.location.href("/");
+    })
+  }
   return (
     <nav id="top">
       <div className="container">
@@ -8,24 +37,35 @@ function Navbar() {
         <div className="nav float-right">
           <ul className="list-inline">
             <li className="list-inline-item">
-              <a href="\login">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6 nav-icon"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                  />
-                </svg>
-
-                <span>Tài khoản</span>
-              </a>
+              {user ? (
+                <div className="user-dropdown">
+                  <span className="user-dropdown-toggle" tabIndex={0} style={{ marginRight: "10px", cursor: "pointer" }}>
+                     {user.fullName}
+                  </span>
+                  <ul className="user-dropdown-menu" style={{ listStyle: "none", margin: 0, padding: 0, position: "absolute", top:"20px" }}>
+                    <li><a href="/profile">Hồ sơ</a></li>
+                    <li on><a onClick={logOutHandle}>Đăng xuất</a></li>
+                  </ul>
+                </div>
+              ) : (
+                <a href="/login">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6 nav-icon"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                    />
+                  </svg>
+                  <span>Đăng nhập</span>
+                </a>
+              )}
             </li>
             <li className="list-inline-item">
               <a href="/cart">
