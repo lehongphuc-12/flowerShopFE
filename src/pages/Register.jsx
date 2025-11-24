@@ -202,7 +202,7 @@ const Register = () => {
                     className="password-toggle"
                     onClick={() => togglePasswordVisibility("password")}
                   >
-                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                    <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
                   </button>
                 </div>
                 {errors.password && (
@@ -228,7 +228,7 @@ const Register = () => {
                     onClick={() => togglePasswordVisibility("confirmPassword")}
                   >
                     <FontAwesomeIcon
-                      icon={showConfirmPassword ? faEyeSlash : faEye}
+                      icon={showConfirmPassword ?  faEye : faEyeSlash}
                     />
                   </button>
                 </div>
