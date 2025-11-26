@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
+import Toast from "../components/common/Toast";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [toastType, setToastType] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -27,7 +29,7 @@ const Login = () => {
     setLoading(true);
     setMessage("");
     try {
-
+      console.log(formData);
       // Gọi API login ở đây, user sẽ thay URL sau
       const response = await fetch("http://localhost:8080/api/users/login", {
         method: "POST",
@@ -40,10 +42,14 @@ const Login = () => {
       const data = await response.json();
       // Giả sử data.state là kết quả true/false
       if (data.state) {
+        setMessage("Đăng nhập thành công");
+        setToastType("success");
         await new Promise((resolve) => setTimeout(resolve, 1000));
         navigate("/");
       } else {
+        setToastType("error");
         setMessage(data.message || "Đăng nhập thất bại. Vui lòng thử lại!");
+        return;
       }
     } catch (error) {
       setMessage("Có lỗi xảy ra. Vui lòng thử lại!");
@@ -99,11 +105,11 @@ const Login = () => {
               <span>Hoặc</span>
             </div>
             <form onSubmit={handleSubmit} className="login-form">
-              {message && (
+              {/* {message && (
                 <div className="login-message" style={{ color: 'red', marginBottom: 8 }}>
                   {message}
                 </div>
-              )}
+              )} */}
               <div className="form-group">
                 <label htmlFor="email">Email hoặc tên đăng nhập</label>
                 <input
@@ -152,6 +158,7 @@ const Login = () => {
               <button type="submit" className="login-button" disabled={loading}>
                 {loading ? "Đang đăng nhập..." : "Đăng nhập"}
               </button>
+              {message && <Toast message={message} type={toastType}/>}
             </form>
 
             <div className="signup-link">

@@ -1,33 +1,34 @@
 import React, { useEffect, useState } from "react";
 import "../layout/Navbar.css";
 function Navbar() {
-  const [user, setUser] = useState(null); // null: chưa fetch, false: chưa đăng nhập, {username} đã đăng nhập
+  const [userName, setUserName] = useState(null); // null: chưa fetch, false: chưa đăng nhập, {username} đã đăng nhập
 
   useEffect(() => {
-    // Gọi API profile (bạn tự điền/đổi URL sau nếu cần)
-    fetch("http://localhost:8080/api/users/profile", {
+    fetch("http://localhost:8080/api/users/logInStatus", {
       method: "GET",
-      credentials: "include", // gửi cookie
+      credentials: "include",
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if(data.fullName) {
-          console.log(data);
-          setUser(data);
+      .then(async (res) => {
+
+        
+        const data = await res.json();
+        if(data.status) {
+          setUserName(data.fullName);
         } else {
-          setUser(false);
+          setUserName(false);
         }
       })
-      .catch(() => setUser(false));
+      .catch(() => setUserName(false));
   }, []);
+  
   function logOutHandle() {
-    fetch("http://localhost:8080/api/users/profile", {
-      method : "GET",
+    fetch("http://localhost:8080/api/users/logout", {
+      method : "POST",
       credentials: "include",
     })
     .then(() => {
-      setUser(false);
-      window.location.href("/");
+      setUserName(false);
+      window.location.href = "/";
     })
   }
   return (
@@ -37,14 +38,14 @@ function Navbar() {
         <div className="nav float-right">
           <ul className="list-inline">
             <li className="list-inline-item">
-              {user ? (
+              {userName ? (
                 <div className="user-dropdown">
                   <span className="user-dropdown-toggle" tabIndex={0} style={{ marginRight: "10px", cursor: "pointer" }}>
-                     {user.fullName}
+                     {userName}
                   </span>
                   <ul className="user-dropdown-menu" style={{ listStyle: "none", margin: 0, padding: 0, position: "absolute", top:"20px" }}>
                     <li><a href="/profile">Hồ sơ</a></li>
-                    <li on><a onClick={logOutHandle}>Đăng xuất</a></li>
+                    <li ><a onClick={logOutHandle}>Đăng xuất</a></li>
                   </ul>
                 </div>
               ) : (
