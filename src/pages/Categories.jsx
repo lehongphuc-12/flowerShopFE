@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Categories.css";
 import ProductFillter from "../components/layout/categories/ProductFillter";
 import ProductDisplay from "../components/layout/product/ProductDisplay";
+import axios from "axios";
 const Categories = () => {
   const [filters, setFilters] = useState({
     topics: [],
@@ -10,7 +11,7 @@ const Categories = () => {
     flowerColors: [],
     hasDiscount: false,
   });
-
+  
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
   };

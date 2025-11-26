@@ -1,26 +1,29 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Categories.css";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { topics, Design, flowerTypes } from "../../data/CategoriesData";
+import { useEffect, useState } from "react";
+import axios from "axios";
+// import { topics, Design, flowerTypes } from "../../data/CategoriesData";
 
 const Categories = () => {
-  // Kết hợp tất cả các categories
+  const [topics, setTopics] = useState(null);
+  const [designs, setDesigns] = useState(null);
+  const [flowerTypes, setFlowerTypes] = useState(null);
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/categories/")
+    .then((res) => {
+      setTopics(res.data.topics);
+      setDesigns(res.data.designs);
+      setFlowerTypes(res.data.flowerTypes)
+    })
+  }, [])
   const allCategories = [
     { id: 1, name: "Chủ đề", children: topics },
-    {
-      id: 2,
-      name: "Hoa sinh nhật",
-      children: topics.find((item) => item.id === 1)?.children || [],
-    },
-    {
-      id: 3,
-      name: "Hoa chúc mừng",
-      children: topics.find((item) => item.id === 2)?.children || [],
-    },
-    { id: 4, name: "Thiết kế", children: Design },
-    { id: 5, name: "HOA TƯƠI", children: flowerTypes },
-    { id: 6, name: "Hoa Tươi Giảm Giá" },
-    { id: 7, name: "Best seler" },
+    { id: 2, name: "Thiết kế", children: designs },
+    { id: 3, name: "HOA TƯƠI", children: flowerTypes },
+    { id: 4, name: "Hoa Tươi Giảm Giá" },
+    { id: 5, name: "Best seler" },
   ];
 
   return (
@@ -64,10 +67,14 @@ const Categories = () => {
                   </a>
                   {category.children && category.children.length > 0 && (
                     <ul className="dropdown-menu">
-                      {category.children.map((child) => (
-                        <li key={child.id}>
+                      {category.children.map((child, idx) => (
+                        <li key={child.id ?? `${category.id}-${idx}`}>
                           <a className="dropdown-item" href="/categories">
-                            {child.name}
+                            {category.id === 1
+                              ? child.categoryName
+                              : category.id === 2
+                              ? child.designName
+                              : child.typeName}
                           </a>
                         </li>
                       ))}
