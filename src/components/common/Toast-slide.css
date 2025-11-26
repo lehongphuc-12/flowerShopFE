@@ -1,0 +1,30 @@
+
+
+.toast-slide-in {
+  animation: toastSlideIn 0.4s ease-out forwards;
+}
+.toast-slide-out {
+  animation: toastSlideOut 0.4s ease-in forwards;
+}
+
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(120%);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}

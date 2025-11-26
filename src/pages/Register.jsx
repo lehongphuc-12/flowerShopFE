@@ -3,13 +3,14 @@ import "./Register.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Toast from '../components/common/Toast';
 
 const Register = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
   });
@@ -17,6 +18,10 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [toastType, setToastType] = useState('info');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,52 +38,79 @@ const Register = () => {
     }
   };
 
-  const validateForm = () => {
-    const newErrors = {};
+  // const validateForm = () => {
+  //   const newErrors = {};
 
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = "Vui lòng nhập họ và tên";
-    }
+  //   if (!formData.fullName.trim()) {
+  //     newErrors.fullName = "Vui lòng nhập họ và tên";
+  //   }
 
-    if (!formData.email.trim()) {
-      newErrors.email = "Vui lòng nhập email";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Email không hợp lệ";
-    }
+  //   if (!formData.email.trim()) {
+  //     newErrors.email = "Vui lòng nhập email";
+  //   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+  //     newErrors.email = "Email không hợp lệ";
+  //   }
 
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Vui lòng nhập số điện thoại";
-    } else if (!/^[0-9]{10,11}$/.test(formData.phone.replace(/\s/g, ""))) {
-      newErrors.phone = "Số điện thoại không hợp lệ";
-    }
+  //   if (!formData.phoneNumber.trim()) {
+  //     newErrors.phoneNumber = "Vui lòng nhập số điện thoại";
+  //   } else if (!/^[0-9]{10,11}$/.test(formData.phoneNumber.replace(/\s/g, ""))) {
+  //     newErrors.phoneNumber = "Số điện thoại không hợp lệ";
+  //   }
 
-    if (!formData.password) {
-      newErrors.password = "Vui lòng nhập mật khẩu";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
-    }
+  //   if (!formData.password) {
+  //     newErrors.password = "Vui lòng nhập mật khẩu";
+  //   } else if (formData.password.length < 6) {
+  //     newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
+  //   }
 
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Vui lòng xác nhận mật khẩu";
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
-    }
+  //   if (!formData.confirmPassword) {
+  //     newErrors.confirmPassword = "Vui lòng xác nhận mật khẩu";
+  //   } else if (formData.password !== formData.confirmPassword) {
+  //     newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
+  //   }
 
-    if (!acceptTerms) {
-      newErrors.acceptTerms = "Vui lòng đồng ý với điều khoản";
-    }
+  //   if (!acceptTerms) {
+  //     newErrors.acceptTerms = "Vui lòng đồng ý với điều khoản";
+  //   }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      // Handle registration logic here
-      console.log("Registration attempt:", formData);
-      // You can add API call here
+    setLoading(true);
+    setMessage("");
+    try {
+      const response = await fetch("http://localhost:8080/api/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        setMessage(errorData?.message || "Đăng kí thất bại");
+        setToastType("error");
+        setLoading(false);
+        return;
+      }
+      const data = await response.json();
+      if (data.state) {
+        setMessage(data.message);
+        setToastType("success");
+        setTimeout(() => navigate("/"), 1000);
+      } else {
+        setMessage(data.message);
+        setToastType("error");
+      }
+    } catch {
+      setMessage("Có lỗi xảy ra. Vui lòng thử lại!");
+      setToastType("error");
     }
+    setLoading(false);
   };
 
   const togglePasswordVisibility = (field) => {
@@ -157,14 +189,14 @@ const Register = () => {
                   <input
                     type="tel"
                     id="phone"
-                    name="phone"
-                    value={formData.phone}
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
                     onChange={handleChange}
                     placeholder="Nhập số điện thoại"
-                    className={errors.phone ? "error" : ""}
+                    className={errors.phoneNumber ? "error" : ""}
                   />
-                  {errors.phone && (
-                    <span className="error-message">{errors.phone}</span>
+                  {errors.phoneNumber && (
+                    <span className="error-message">{errors.phoneNumber}</span>
                   )}
                 </div>
               </div>
@@ -202,7 +234,7 @@ const Register = () => {
                     className="password-toggle"
                     onClick={() => togglePasswordVisibility("password")}
                   >
-                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                    <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
                   </button>
                 </div>
                 {errors.password && (
@@ -228,7 +260,7 @@ const Register = () => {
                     onClick={() => togglePasswordVisibility("confirmPassword")}
                   >
                     <FontAwesomeIcon
-                      icon={showConfirmPassword ? faEyeSlash : faEye}
+                      icon={showConfirmPassword ?  faEye : faEyeSlash}
                     />
                   </button>
                 </div>
@@ -266,11 +298,11 @@ const Register = () => {
                 )}
               </div>
 
-              <button type="submit" className="register-button">
-                Đăng ký
+              <button type="submit" className="register-button" disabled={loading}>
+              {loading ? "Đang đăng kí..." : "Đăng kí"}
               </button>
             </form>
-
+            {message && <Toast message={message} type={toastType} />}
             <div className="login-link">
               <p>
                 Đã có tài khoản? <Link to="/login">Đăng nhập ngay</Link>

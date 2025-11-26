@@ -87,7 +87,7 @@ const Header = () => {
                 </svg>
               </div>
               <ul
-                class="dropdown-menu menu-cart"
+                className="dropdown-menu menu-cart"
                 aria-labelledby="dropdownMenuButton1"
               >
                 <li>
