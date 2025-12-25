@@ -1,36 +1,59 @@
 import React, { useEffect, useState } from "react";
 import "../layout/Navbar.css";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 function Navbar() {
   const [userName, setUserName] = useState(null); // null: chưa fetch, false: chưa đăng nhập, {username} đã đăng nhập
-
-  useEffect(() => {
-    fetch("http://localhost:8080/api/users/logInStatus", {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const fetchLoginStatus = () => {
+    fetch("/api/users/logInStatus", {
       method: "GET",
       credentials: "include",
     })
       .then(async (res) => {
-
-        
         const data = await res.json();
-        if(data.status) {
+        if (data.status) {
           setUserName(data.fullName);
         } else {
           setUserName(false);
         }
       })
       .catch(() => setUserName(false));
-  }, []);
-  
+  };
+
   function logOutHandle() {
-    fetch("http://localhost:8080/api/users/logout", {
-      method : "POST",
+    fetch("/api/users/logout", {
+      method: "POST",
       credentials: "include",
-    })
-    .then(() => {
+    }).then(() => {
       setUserName(false);
-      window.location.href = "/";
-    })
+      localStorage.setItem("refreshAuth", "true");
+      navigate("/", { replace: true, state: { refreshAuth: true } });
+    });
   }
+  useEffect(() => {
+    // Luôn fetch khi component mount lần đầu
+    fetchLoginStatus();
+  }, []);
+
+  useEffect(() => {
+    // Kiểm tra tín hiệu refresh từ location state hoặc localStorage
+    const shouldRefresh =
+      location.state?.refreshAuth ||
+      localStorage.getItem("refreshAuth") === "true";
+
+    if (shouldRefresh) {
+      fetchLoginStatus();
+      // Clear tín hiệu sau khi đã fetch
+      localStorage.removeItem("refreshAuth");
+      if (location.state?.refreshAuth) {
+        navigate(location.pathname, {
+          replace: true,
+          state: { ...location.state, refreshAuth: undefined },
+        });
+      }
+    }
+  }, [location.state, navigate]);
   return (
     <nav id="top">
       <div className="container">
@@ -40,16 +63,33 @@ function Navbar() {
             <li className="list-inline-item">
               {userName ? (
                 <div className="user-dropdown">
-                  <span className="user-dropdown-toggle" tabIndex={0} style={{ marginRight: "10px", cursor: "pointer" }}>
-                     {userName}
+                  <span
+                    className="user-dropdown-toggle"
+                    tabIndex={0}
+                    style={{ marginRight: "10px", cursor: "pointer" }}
+                  >
+                    {userName}
                   </span>
-                  <ul className="user-dropdown-menu" style={{ listStyle: "none", margin: 0, padding: 0, position: "absolute", top:"20px" }}>
-                    <li><a href="/profile">Hồ sơ</a></li>
-                    <li ><a onClick={logOutHandle}>Đăng xuất</a></li>
+                  <ul
+                    className="user-dropdown-menu"
+                    style={{
+                      listStyle: "none",
+                      margin: 0,
+                      padding: 0,
+                      position: "absolute",
+                      top: "20px",
+                    }}
+                  >
+                    <li>
+                      <a href="/profile">Hồ sơ</a>
+                    </li>
+                    <li>
+                      <a onClick={logOutHandle}>Đăng xuất</a>
+                    </li>
                   </ul>
                 </div>
               ) : (
-                <a href="/login">
+                <Link to="/login" state={{ from: location.pathname }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -65,7 +105,7 @@ function Navbar() {
                     />
                   </svg>
                   <span>Đăng nhập</span>
-                </a>
+                </Link>
               )}
             </li>
             <li className="list-inline-item">
