@@ -3,7 +3,7 @@ import "./Login.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Toast from "../components/common/Toast";
 
 const Login = () => {
@@ -16,6 +16,8 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [toastType, setToastType] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || "/";
 
   const handleChange = (e) => {
     setFormData({
@@ -31,7 +33,7 @@ const Login = () => {
     try {
       console.log(formData);
       // Gọi API login ở đây, user sẽ thay URL sau
-      const response = await fetch("http://localhost:8080/api/users/login", {
+      const response = await fetch("/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,8 +46,9 @@ const Login = () => {
       if (data.state) {
         setMessage("Đăng nhập thành công");
         setToastType("success");
+        localStorage.setItem("refreshAuth", "true"); // Tín hiệu cho Navbar biết cần fetch lại
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        navigate("/");
+        navigate(from, { replace: true, state: { refreshAuth: true } });
       } else {
         setToastType("error");
         setMessage(data.message || "Đăng nhập thất bại. Vui lòng thử lại!");
@@ -158,7 +161,7 @@ const Login = () => {
               <button type="submit" className="login-button" disabled={loading}>
                 {loading ? "Đang đăng nhập..." : "Đăng nhập"}
               </button>
-              {message && <Toast message={message} type={toastType}/>}
+              {message && <Toast message={message} type={toastType} />}
             </form>
 
             <div className="signup-link">

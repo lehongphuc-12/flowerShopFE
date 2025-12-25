@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
-import Toast from '../components/common/Toast';
+import Toast from "../components/common/Toast";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +20,7 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [toastType, setToastType] = useState('info');
+  const [toastType, setToastType] = useState("info");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -82,7 +82,7 @@ const Register = () => {
     setLoading(true);
     setMessage("");
     try {
-      const response = await fetch("http://localhost:8080/api/users/register", {
+      const response = await fetch("/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -260,7 +260,7 @@ const Register = () => {
                     onClick={() => togglePasswordVisibility("confirmPassword")}
                   >
                     <FontAwesomeIcon
-                      icon={showConfirmPassword ?  faEye : faEyeSlash}
+                      icon={showConfirmPassword ? faEye : faEyeSlash}
                     />
                   </button>
                 </div>
@@ -298,8 +298,12 @@ const Register = () => {
                 )}
               </div>
 
-              <button type="submit" className="register-button" disabled={loading}>
-              {loading ? "Đang đăng kí..." : "Đăng kí"}
+              <button
+                type="submit"
+                className="register-button"
+                disabled={loading}
+              >
+                {loading ? "Đang đăng kí..." : "Đăng kí"}
               </button>
             </form>
             {message && <Toast message={message} type={toastType} />}
