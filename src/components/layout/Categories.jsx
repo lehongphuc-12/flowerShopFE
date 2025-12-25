@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Categories.css";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 // import { topics, Design, flowerTypes } from "../../data/CategoriesData";
 
@@ -11,13 +12,12 @@ const Categories = () => {
   const [flowerTypes, setFlowerTypes] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/categories/")
-    .then((res) => {
+    axios.get("/api/categories/").then((res) => {
       setTopics(res.data.topics);
       setDesigns(res.data.designs);
-      setFlowerTypes(res.data.flowerTypes)
-    })
-  }, [])
+      setFlowerTypes(res.data.flowerTypes);
+    });
+  }, []);
   const allCategories = [
     { id: 1, name: "Chủ đề", children: topics },
     { id: 2, name: "Thiết kế", children: designs },
@@ -62,20 +62,42 @@ const Categories = () => {
                     category.children ? "has-children" : ""
                   }`}
                 >
-                  <a className="nav-link" href="/categories">
+                  <Link
+                    className="nav-link"
+                    to={
+                      category.id === 4
+                        ? "/categories?hasDiscount=true"
+                        : category.id === 5
+                        ? "/categories?bestSeler=true"
+                        : "/categories"
+                    }
+                  >
                     {category.name}
-                  </a>
+                  </Link>
                   {category.children && category.children.length > 0 && (
                     <ul className="dropdown-menu">
                       {category.children.map((child, idx) => (
                         <li key={child.id ?? `${category.id}-${idx}`}>
-                          <a className="dropdown-item" href="/categories">
-                            {category.id === 1
-                              ? child.categoryName
-                              : category.id === 2
-                              ? child.designName
-                              : child.typeName}
-                          </a>
+<Link
+  className=""
+  to={
+    category.id === 1
+      ? `/categories?categoryId=${encodeURIComponent(child.categoryId)}`
+      : category.id === 2
+      ? `/categories?designId=${encodeURIComponent(child.designId)}`
+      : category.id === 3 
+      ? `/categories?flowerTypeId=${encodeURIComponent(child.flowerTypeId)}`
+      : category.id === 4
+      ? `/categories?hasDiscount=true`
+      : `/categories?bestSeler=true`
+  }
+>
+  {category.id === 1
+    ? child.categoryName
+    : category.id === 2
+    ? child.designName
+    : child.typeName}
+</Link>
                         </li>
                       ))}
                     </ul>

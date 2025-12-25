@@ -3,9 +3,14 @@ import Card from "../ui/Card";
 import "./ProductCard.css";
 
 export default function ProductCard({ product }) {
-  const { name, price, discount, id } = product;
+  const flowerId = product.flowerId || product.id;
+  const flowerName = product.flowerName || product.name;
+  const imageUrl = product.imageUrl || product.url;
+  const price = product.price || 0;
+  const discount = product.discount || 0;
+  
   const finalPrice = price - (price * discount) / 100;
-
+  // console.log(product);
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -16,11 +21,11 @@ export default function ProductCard({ product }) {
 
   return (
     <Card>
-      <Link to={`/product/${id}`} className="product-card-link">
+      <Link to={`/product/${flowerId}`} className="product-card-link">
         <div className="product-card">
-          <img src={product.url} alt={name} />
+          <img src={imageUrl || product.url} alt={flowerName} />
 
-          <h5>{name}</h5>
+          <h5>{flowerName}</h5>
 
           <div className="price-container">
             <p className="final-price">{finalPrice.toLocaleString()}đ</p>
