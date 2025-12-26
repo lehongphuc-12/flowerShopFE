@@ -94,8 +94,7 @@ const Register = () => {
       }
     } catch (error) {
       console.error("Register error:", error);
-      const errorMessage = error.response?.data?.message || "Có lỗi xảy ra. Vui lòng thử lại!";
-      setMessage(errorMessage);
+      setMessage(error.message || "Có lỗi xảy ra. Vui lòng thử lại!");
       setToastType("error");
     }
     setLoading(false);

@@ -2,20 +2,16 @@ import apiClient from "./apiClient";
 
 const authService = {
   login: async (credentials) => {
-    const response = await apiClient.post("/users/login", credentials);
-    return response.data;
+    return apiClient.post("/users/login", credentials);
   },
   register: async (userData) => {
-    const response = await apiClient.post("/users/register", userData);
-    return response.data;
+    return apiClient.post("/users/register", userData);
   },
   getLoginStatus: async () => {
-    const response = await apiClient.get("/users/logInStatus");
-    return response.data;
+    return apiClient.get("/users/logInStatus");
   },
   logout: async () => {
-    const response = await apiClient.post("/users/logout");
-    return response.data;
+    return apiClient.post("/users/logout");
   },
 };
 

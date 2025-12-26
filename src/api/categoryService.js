@@ -2,8 +2,7 @@ import apiClient from "./apiClient";
 
 const categoryService = {
   getCategories: async () => {
-    const response = await apiClient.get("/categories/");
-    return response.data;
+    return apiClient.get("/categories/");
   },
 };
 
