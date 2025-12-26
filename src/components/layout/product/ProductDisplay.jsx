@@ -1,6 +1,8 @@
 import React from "react";
 import "./ProductDisplay.css";
 import ProductCard from "../../products/ProductCard";
+import NotFound from "../../common/NotFound";
+
 const ProductDisplay = ({ title, products = [], useFlex = false, quantity }) => {
   let dataToShow = products;
 
@@ -10,14 +12,19 @@ const ProductDisplay = ({ title, products = [], useFlex = false, quantity }) => 
 
   return (
     <div className="productDisplay">
-      <h4>{title}</h4>
-      <div className={`row${useFlex ? " flex-row" : ""}`}>
-        {dataToShow.length > 0 ? (
-          dataToShow.map((item) => <ProductCard key={item.id} product={item} />)
-        ) : (
-          <p>No products available</p>
-        )}
-      </div>
+      {title && <h4>{title}</h4>}
+      {dataToShow.length > 0 ? (
+        <div className={`row${useFlex ? " flex-row" : ""}`}>
+          {dataToShow.map((item) => (
+            <ProductCard key={item.id} product={item} />
+          ))}
+        </div>
+      ) : (
+        <NotFound
+          message="Hiện tại không có sản phẩm nào trong danh mục này."
+          showBackButton={false}
+        />
+      )}
     </div>
   );
 };

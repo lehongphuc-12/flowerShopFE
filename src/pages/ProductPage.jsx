@@ -12,6 +12,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import useProductDetail from "../hooks/useProductDetail";
 import LoadingSpinner from "../components/common/LoadingSpinner";
+import NotFound from "../components/common/NotFound";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -29,10 +30,7 @@ const ProductPage = () => {
   if (!product) {
     return (
       <div className="container product-page">
-        <div className="not-found-message">Không tìm thấy sản phẩm!</div>
-        <button className="btn" onClick={() => navigate(-1)}>
-          Quay lại
-        </button>
+        <NotFound message="Rất tiếc, sản phẩm bạn đang tìm kiếm không tồn tại hoặc đã bị gỡ bỏ!" />
       </div>
     );
   }
