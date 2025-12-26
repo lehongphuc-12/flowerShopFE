@@ -1,23 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./ProductPage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartPlus, faLocationDot, faPhoneVolume } from "@fortawesome/free-solid-svg-icons";
-import { flowers } from "../data/ProductsData";
+import { flowers } from "../data/ProductsData.js";
 import ProductDisplay from "../components/layout/product/ProductDisplay";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import ProductCard from "../components/products/ProductCard";
 import "swiper/css";
 import "swiper/css/navigation";
+import axios from "axios";
 
 const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const product = flowers.find((p) => p.id === Number(id));
+  const [product, setProduct] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    axios.get(`/api/product/${id}`).then((res) => {
+      setProduct(res.data);
+    });
+    
   }, [id]);
 
   if (!product) {
@@ -28,7 +33,11 @@ const ProductPage = () => {
       </div>
     );
   }
-  const finalPrice = product.price - (product.price * product.discount) / 100;
+  const flowerName = product.flowerName || product.name || "";
+  const imageUrl = product.imageUrl || product.url || "";
+  const price = product.price || 0;
+  const discount = product.discount || 0;
+  const finalPrice = price - (price * discount) / 100;
   return (
     <div className="container product-page">
       <div className="back-link">
@@ -36,15 +45,15 @@ const ProductPage = () => {
       </div>
       <div className="product-detail-grid">
         <div className="product-detail-image-box">
-          <img src={product.url} alt={product.name} className="main-product-image" />
+          <img src={imageUrl} alt={flowerName} className="main-product-image" />
         </div>
         <div className="product-detail-info">
-          <h1>{product.name}</h1>
+          <h1>{flowerName}</h1>
           <div className="product-desc">{product.description}</div>
           <div className="price-container">
             <span className="product-final-price">{finalPrice.toLocaleString()}đ</span>
-            {product.discount > 0 && <span className="product-original-price">{product.price.toLocaleString()}đ</span>}
-            {product.discount > 0 && <span className="product-discount">-{product.discount}%</span>}
+            {discount > 0 && <span className="product-original-price">{price.toLocaleString()}đ</span>}
+            {discount > 0 && <span className="product-discount">-{discount}%</span>}
           </div>
           <div className="call_us_ship">
             <div className="buy-in-store">Mua tại cửa hàng</div>
