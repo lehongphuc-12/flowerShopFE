@@ -10,33 +10,33 @@ import { Navigation } from "swiper/modules";
 import ProductCard from "../components/products/ProductCard";
 import "swiper/css";
 import "swiper/css/navigation";
-import productService from "../api/productService";
+import useProductDetail from "../hooks/useProductDetail";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 
 const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [product, setProduct] = useState(null);
+  const { product, loading } = useProductDetail(id);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    productService.getProductById(id)
-      .then((data) => {
-        setProduct(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching product by id:", error);
-      });
-    
-  }, [id]);
+  if (loading) {
+    return (
+      <div className="container product-page">
+        <LoadingSpinner message="Đang tải thông tin sản phẩm..." />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
       <div className="container product-page">
-        <div>Không tìm thấy sản phẩm!</div>
-        <button className="btn" onClick={() => navigate(-1)}>Quay lại</button>
+        <div className="not-found-message">Không tìm thấy sản phẩm!</div>
+        <button className="btn" onClick={() => navigate(-1)}>
+          Quay lại
+        </button>
       </div>
     );
   }
+
   const flowerName = product.flowerName || product.name || "";
   const imageUrl = product.imageUrl || product.url || "";
   const price = product.price || 0;

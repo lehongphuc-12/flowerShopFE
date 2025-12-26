@@ -5,6 +5,7 @@ import ProductDisplay from "../components/layout/product/ProductDisplay";
 import ReactPaginate from "react-paginate";
 import { useSearchParams } from "react-router-dom";
 import useProducts from "../hooks/useProducts";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 
 const Categories = () => {
   const [searchParams] = useSearchParams();
@@ -19,7 +20,7 @@ const Categories = () => {
     size: 16,
   };
 
-  const { products, totalPage, filters, updateFilters, changePage } = useProducts(initialFilters);
+  const { products, totalPage, filters, updateFilters, changePage, loading } = useProducts(initialFilters);
   const [, setSearchParams] = useSearchParams();
 
   useEffect(() => {
@@ -59,7 +60,11 @@ const Categories = () => {
     <div className="container content">
       <div className="content-main-vertical">
         <ProductFillter onFilterChange={handleFilterChange} />
-        <ProductDisplay products={products} />
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <ProductDisplay products={products} />
+        )}
         <ReactPaginate
           pageCount={totalPage}
           forcePage={filters.page - 1}

@@ -12,7 +12,12 @@ const useProducts = (initialFilters) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await productService.getProducts(filters);
+      // Đảm bảo delay ít nhất 1.2s để tránh giật lag UI và show "No products" quá sớm
+      const [data] = await Promise.all([
+        productService.getProducts(filters),
+        new Promise((resolve) => setTimeout(resolve, 1000)),
+      ]);
+      
       setProducts(data.content || []);
       setTotalPage(data.totalPages || 0);
       window.scrollTo({
