@@ -1,81 +1,55 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./Categories.css";
 import ProductFillter from "../components/layout/categories/ProductFillter";
 import ProductDisplay from "../components/layout/product/ProductDisplay";
 import ReactPaginate from "react-paginate";
 import { useSearchParams } from "react-router-dom";
-import productService from "../api/productService";
+import useProducts from "../hooks/useProducts";
 
 const Categories = () => {
-  const [products, setProducts] = useState([]);
-  const [totalPage, setTotalPage] = useState(0);
   const [searchParams] = useSearchParams();
 
-  const [filters, setFilters] = useState(() => {
-    return {
+  const initialFilters = {
+    topicId: Number(searchParams.get("categoryId")) || 0,
+    designId: Number(searchParams.get("designId")) || 0,
+    flowerTypeId: Number(searchParams.get("flowerTypeId")) || 0,
+    hasDiscount: searchParams.get("hasDiscount") === "true",
+    bestSeler: searchParams.get("bestSeler") === "true",
+    page: 1,
+    size: 16,
+  };
+
+  const { products, totalPage, filters, updateFilters, changePage } = useProducts(initialFilters);
+
+  useEffect(() => {
+    // Luôn đồng bộ state hooks với URL khi URL thay đổi từ nguồn khác (ví dụ: click Navbar link)
+    const urlFilters = {
       topicId: Number(searchParams.get("categoryId")) || 0,
       designId: Number(searchParams.get("designId")) || 0,
       flowerTypeId: Number(searchParams.get("flowerTypeId")) || 0,
       hasDiscount: searchParams.get("hasDiscount") === "true",
       bestSeler: searchParams.get("bestSeler") === "true",
-      page: 1,
-      size: 16,
     };
-  });
-  useEffect(() => {
-    // Luôn đồng bộ state parent với URL để chắc chắn request đúng
-    const urlTopic = Number(searchParams.get("categoryId")) || 0;
-    const urlDesign = Number(searchParams.get("designId")) || 0;
-    const urlFlowerType = Number(searchParams.get("flowerTypeId")) || 0;
-    const urlHasDiscount = searchParams.get("hasDiscount") === "true";
-    const urlBestSeler = searchParams.get("bestSeler") === "true";
-
-    setFilters(prev => {
-      if (
-        prev.topicId !== urlTopic ||
-        prev.designId !== urlDesign ||
-        prev.flowerTypeId !== urlFlowerType ||
-        prev.hasDiscount !== urlHasDiscount ||
-        prev.bestSeler !== urlBestSeler
-      ) {
-        return {
-          ...prev,
-          topicId: urlTopic,
-          designId: urlDesign,
-          flowerTypeId: urlFlowerType,
-          hasDiscount: urlHasDiscount,
-          bestSeler: urlBestSeler,
-          page: 1, // Reset trang khi đổi filter
-        };
-      }
-      return prev;
-    });
-  }, [searchParams]);
+    
+    // Chỉ update nếu có sự khác biệt để tránh loop
+    if (
+      filters.topicId !== urlFilters.topicId ||
+      filters.designId !== urlFilters.designId ||
+      filters.flowerTypeId !== urlFilters.flowerTypeId ||
+      filters.hasDiscount !== urlFilters.hasDiscount ||
+      filters.bestSeler !== urlFilters.bestSeler
+    ) {
+      updateFilters(urlFilters);
+    }
+  }, [searchParams, filters, updateFilters]);
 
   const handleFilterChange = React.useCallback((newFilter) => {
-    setFilters(prev => ({
-      ...prev,
-      ...newFilter,
-      page: 1,
-    }));
-  }, []);
+    updateFilters(newFilter);
+  }, [updateFilters]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await productService.getProducts(filters);
-        setProducts(data.content);
-        setTotalPage(data.totalPages);
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-      } catch (err) {
-        console.error("Error fetching products:", err);
-      }
-    };
-    fetchData();
-  }, [filters]);
+  const handlePageChange = (e) => {
+    changePage(e.selected + 1);
+  };
 
   return (
     <div className="container content">
@@ -85,12 +59,7 @@ const Categories = () => {
         <ReactPaginate
           pageCount={totalPage}
           forcePage={filters.page - 1}
-          onPageChange={(e) =>
-            setFilters((prev) => ({
-              ...prev,
-              page: e.selected + 1,
-            }))
-          }
+          onPageChange={handlePageChange}
           previousLabel="Prev"
           nextLabel="Next"
           containerClassName="pagination"

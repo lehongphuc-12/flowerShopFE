@@ -1,26 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./ProductFillter.css";
-import categoryService from "../../../api/categoryService";
-// import { topics, Design, flowerTypes, flowerColors } from "../../../data/CategoriesData";
+import useCategories from "../../../hooks/useCategories";
 
 const ProductFillter = ({ onFilterChange }) => {
-  const [topics, setTopics] = useState([]);
-  const [designs, setDesigns] = useState([]);
-  const [flowerTypes, setFlowerTypes] = useState([]);
+  const { topics, designs, flowerTypes } = useCategories();
   const [searchParams] = useSearchParams();
-
-  useEffect(() => {
-    categoryService.getCategories()
-      .then((data) => {
-        setTopics(data.topics || []);
-        setDesigns(data.designs || []);
-        setFlowerTypes(data.flowerTypes || []);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  }, []);
 
   const [filter, setFilter] = useState(() => {
     return {
