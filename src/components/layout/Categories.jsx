@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Categories.css";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -10,6 +10,11 @@ const Categories = () => {
   const [topics, setTopics] = useState(null);
   const [designs, setDesigns] = useState(null);
   const [flowerTypes, setFlowerTypes] = useState(null);
+  const [activeCategory, setActiveCategory] = useState(null);
+
+  const toggleCategory = (id) => {
+    setActiveCategory(activeCategory === id ? null : id);
+  };
 
   useEffect(() => {
     axios.get("/api/categories/").then((res) => {
@@ -36,68 +41,88 @@ const Categories = () => {
         background: "#fff",
       }}
     >
-      <nav className="navbar navbar-expand-lg " style={{ padding: "0px" }}>
-        <div
-          className="container-fluid"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            borderBottom: "1px solid #ddd",
-          }}
-        >
+      <nav className="navbar navbar-expand-lg" style={{ padding: "0" }}>
+        <div className="container-fluid category-nav-container">
           <button
-            className="navbar-toggler"
+            className="navbar-toggler custom-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#narbar-menu"
+            aria-controls="narbar-menu"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
           >
             <FontAwesomeIcon icon={faBars} />
+            <span style={{ marginLeft: "10px", fontSize: "14px" }}>DANH MỤC</span>
           </button>
-          <div className="collapse navbar-collapse categories">
+          
+          <div className="collapse navbar-collapse justify-content-center" id="narbar-menu">
             <ul className="navbar-nav">
               {allCategories.map((category) => (
                 <li
                   key={category.id}
                   className={`nav-item dropdown ${
                     category.children ? "has-children" : ""
-                  }`}
+                  } ${activeCategory === category.id ? "active" : ""}`}
                 >
-                  <Link
-                    className="nav-link"
-                    to={
-                      category.id === 4
-                        ? "/categories?hasDiscount=true"
-                        : category.id === 5
-                        ? "/categories?bestSeler=true"
-                        : "/categories"
-                    }
+                  <div 
+                    className={`nav-link-wrapper ${category.children ? "clickable" : ""}`}
+                    onClick={(e) => {
+                      if (category.children && category.children.length > 0) {
+                        // Chỉ trigger toggle trên mobile (dựa trên class hoặc width, nhưng ở đây dùng logic toggle chung)
+                        toggleCategory(category.id);
+                      }
+                    }}
                   >
-                    {category.name}
-                  </Link>
+                    <Link
+                      className="nav-link"
+                      to={
+                        category.id === 4
+                          ? "/categories?hasDiscount=true"
+                          : category.id === 5
+                          ? "/categories?bestSeler=true"
+                          : "/categories"
+                      }
+                      onClick={(e) => {
+                        // Nếu có children và đang ở chế độ accordion (active), ngăn chuyển trang để focus vào việc mở menu con
+                        if (category.children && category.children.length > 0) {
+                          e.preventDefault();
+                        }
+                      }}
+                    >
+                      {category.name}
+                    </Link>
+                    {category.children && category.children.length > 0 && (
+                      <span className="mobile-toggle-icon">
+                        <FontAwesomeIcon icon={activeCategory === category.id ? faMinus : faPlus} />
+                      </span>
+                    )}
+                  </div>
+
                   {category.children && category.children.length > 0 && (
-                    <ul className="dropdown-menu">
+                    <ul className={`dropdown-menu ${activeCategory === category.id ? "show" : ""}`}>
                       {category.children.map((child, idx) => (
                         <li key={child.id ?? `${category.id}-${idx}`}>
-<Link
-  className=""
-  to={
-    category.id === 1
-      ? `/categories?categoryId=${encodeURIComponent(child.categoryId)}`
-      : category.id === 2
-      ? `/categories?designId=${encodeURIComponent(child.designId)}`
-      : category.id === 3 
-      ? `/categories?flowerTypeId=${encodeURIComponent(child.flowerTypeId)}`
-      : category.id === 4
-      ? `/categories?hasDiscount=true`
-      : `/categories?bestSeler=true`
-  }
->
-  {category.id === 1
-    ? child.categoryName
-    : category.id === 2
-    ? child.designName
-    : child.typeName}
-</Link>
+                          <Link
+                            className=""
+                            to={
+                              category.id === 1
+                                ? `/categories?categoryId=${encodeURIComponent(child.categoryId)}`
+                                : category.id === 2
+                                ? `/categories?designId=${encodeURIComponent(child.designId)}`
+                                : category.id === 3 
+                                ? `/categories?flowerTypeId=${encodeURIComponent(child.flowerTypeId)}`
+                                : category.id === 4
+                                ? `/categories?hasDiscount=true`
+                                : `/categories?bestSeler=true`
+                            }
+                          >
+                            {category.id === 1
+                              ? child.categoryName
+                              : category.id === 2
+                              ? child.designName
+                              : child.typeName}
+                          </Link>
                         </li>
                       ))}
                     </ul>

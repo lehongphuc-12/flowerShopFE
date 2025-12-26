@@ -6,10 +6,12 @@
   align-items: center;
   position: fixed;
   bottom: 0;
+  bottom: env(safe-area-inset-bottom, 0);
   left: 0;
   width: 100%;
   z-index: 1000;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  transform: translateZ(0); /* Hardware acceleration */
 }
 #metu div {
   padding: 0 20px;

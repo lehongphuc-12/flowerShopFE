@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await authService.getLoginStatus();
       if (data.status) {
-        setUser({ fullName: data.fullName });
+        setUser({ fullName: data.fullName }); 
       } else {
         setUser(null);
       }
