@@ -5,6 +5,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import Toast from "../components/common/Toast";
+import authService from "../api/authService";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -82,32 +83,19 @@ const Register = () => {
     setLoading(true);
     setMessage("");
     try {
-      const response = await fetch("/api/users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        setMessage(errorData?.message || "Đăng kí thất bại");
-        setToastType("error");
-        setLoading(false);
-        return;
-      }
-      const data = await response.json();
+      const data = await authService.register(formData);
       if (data.state) {
         setMessage(data.message);
         setToastType("success");
-        setTimeout(() => navigate("/"), 1000);
+        setTimeout(() => navigate("/login"), 1000); // Redirect to login after successful register
       } else {
-        setMessage(data.message);
+        setMessage(data.message || "Đăng kí thất bại");
         setToastType("error");
       }
-    } catch {
-      setMessage("Có lỗi xảy ra. Vui lòng thử lại!");
+    } catch (error) {
+      console.error("Register error:", error);
+      const errorMessage = error.response?.data?.message || "Có lỗi xảy ra. Vui lòng thử lại!";
+      setMessage(errorMessage);
       setToastType("error");
     }
     setLoading(false);

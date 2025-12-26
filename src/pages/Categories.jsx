@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./Categories.css";
 import ProductFillter from "../components/layout/categories/ProductFillter";
 import ProductDisplay from "../components/layout/product/ProductDisplay";
-import axios from "axios";
 import ReactPaginate from "react-paginate";
 import { useSearchParams } from "react-router-dom";
+import productService from "../api/productService";
 
 const Categories = () => {
   const [products, setProducts] = useState([]);
@@ -63,15 +63,15 @@ const Categories = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.post("/api/product/getProducts", filters);
-        setProducts(res.data.content);
-        setTotalPage(res.data.totalPages);
+        const data = await productService.getProducts(filters);
+        setProducts(data.content);
+        setTotalPage(data.totalPages);
         window.scrollTo({
           top: 0,
           behavior: "smooth",
         });
       } catch (err) {
-        console.error("Error:", err);
+        console.error("Error fetching products:", err);
       }
     };
     fetchData();

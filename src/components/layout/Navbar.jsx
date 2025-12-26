@@ -1,36 +1,37 @@
 import React, { useEffect, useState } from "react";
 import "../layout/Navbar.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import authService from "../../api/authService";
+
 function Navbar() {
   const [userName, setUserName] = useState(null); // null: chưa fetch, false: chưa đăng nhập, {username} đã đăng nhập
   const navigate = useNavigate();
   const location = useLocation();
-  const fetchLoginStatus = () => {
-    fetch("/api/users/logInStatus", {
-      method: "GET",
-      credentials: "include",
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        if (data.status) {
-          setUserName(data.fullName);
-        } else {
-          setUserName(false);
-        }
-      })
-      .catch(() => setUserName(false));
+
+  const fetchLoginStatus = async () => {
+    try {
+      const data = await authService.getLoginStatus();
+      if (data.status) {
+        setUserName(data.fullName);
+      } else {
+        setUserName(false);
+      }
+    } catch (error) {
+      console.error("Fetch login status error:", error);
+      setUserName(false);
+    }
   };
 
-  function logOutHandle() {
-    fetch("/api/users/logout", {
-      method: "POST",
-      credentials: "include",
-    }).then(() => {
+  const logOutHandle = async () => {
+    try {
+      await authService.logout();
       setUserName(false);
       localStorage.setItem("refreshAuth", "true");
       navigate("/", { replace: true, state: { refreshAuth: true } });
-    });
-  }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
   useEffect(() => {
     // Luôn fetch khi component mount lần đầu
     fetchLoginStatus();

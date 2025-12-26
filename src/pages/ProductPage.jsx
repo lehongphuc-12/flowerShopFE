@@ -10,7 +10,7 @@ import { Navigation } from "swiper/modules";
 import ProductCard from "../components/products/ProductCard";
 import "swiper/css";
 import "swiper/css/navigation";
-import axios from "axios";
+import productService from "../api/productService";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -19,9 +19,13 @@ const ProductPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    axios.get(`/api/product/${id}`).then((res) => {
-      setProduct(res.data);
-    });
+    productService.getProductById(id)
+      .then((data) => {
+        setProduct(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching product by id:", error);
+      });
     
   }, [id]);
 

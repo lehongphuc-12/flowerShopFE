@@ -5,6 +5,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Toast from "../components/common/Toast";
+import authService from "../api/authService";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -32,16 +33,9 @@ const Login = () => {
     setMessage("");
     try {
       console.log(formData);
-      // Gọi API login ở đây, user sẽ thay URL sau
-      const response = await fetch("/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
+      // Gọi API login qua service
+      const data = await authService.login(formData);
+      
       // Giả sử data.state là kết quả true/false
       if (data.state) {
         setMessage("Đăng nhập thành công");
@@ -52,10 +46,12 @@ const Login = () => {
       } else {
         setToastType("error");
         setMessage(data.message || "Đăng nhập thất bại. Vui lòng thử lại!");
-        return;
       }
     } catch (error) {
-      setMessage("Có lỗi xảy ra. Vui lòng thử lại!");
+      console.error("Login error:", error);
+      const errorMessage = error.response?.data?.message || "Có lỗi xảy ra. Vui lòng thử lại!";
+      setMessage(errorMessage);
+      setToastType("error");
     }
     setLoading(false);
   };

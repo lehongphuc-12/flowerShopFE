@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./ProductFillter.css";
-import axios from "axios";
+import categoryService from "../../../api/categoryService";
 // import { topics, Design, flowerTypes, flowerColors } from "../../../data/CategoriesData";
 
 const ProductFillter = ({ onFilterChange }) => {
@@ -11,11 +11,15 @@ const ProductFillter = ({ onFilterChange }) => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    axios.get("/api/categories/").then((res) => {
-      setTopics(res.data.topics);
-      setDesigns(res.data.designs);
-      setFlowerTypes(res.data.flowerTypes);
-    });
+    categoryService.getCategories()
+      .then((data) => {
+        setTopics(data.topics || []);
+        setDesigns(data.designs || []);
+        setFlowerTypes(data.flowerTypes || []);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
   }, []);
 
   const [filter, setFilter] = useState(() => {
