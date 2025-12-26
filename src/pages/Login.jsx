@@ -5,9 +5,10 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Toast from "../components/common/Toast";
-import authService from "../api/authService";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -32,17 +33,15 @@ const Login = () => {
     setLoading(true);
     setMessage("");
     try {
-      console.log(formData);
-      // Gọi API login qua service
-      const data = await authService.login(formData);
+      // Gọi API login qua context
+      const data = await login(formData);
       
-      // Giả sử data.state là kết quả true/false
       if (data.state) {
         setMessage("Đăng nhập thành công");
         setToastType("success");
-        localStorage.setItem("refreshAuth", "true"); // Tín hiệu cho Navbar biết cần fetch lại
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        navigate(from, { replace: true, state: { refreshAuth: true } });
+        // Chờ 1 chút để toast hiện lên rồi chuyển trang
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        navigate(from, { replace: true });
       } else {
         setToastType("error");
         setMessage(data.message || "Đăng nhập thất bại. Vui lòng thử lại!");

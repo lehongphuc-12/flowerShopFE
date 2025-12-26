@@ -1,60 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "../layout/Navbar.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import authService from "../../api/authService";
+import { useAuth } from "../../context/AuthContext";
 
 function Navbar() {
-  const [userName, setUserName] = useState(null); // null: chưa fetch, false: chưa đăng nhập, {username} đã đăng nhập
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const fetchLoginStatus = async () => {
-    try {
-      const data = await authService.getLoginStatus();
-      if (data.status) {
-        setUserName(data.fullName);
-      } else {
-        setUserName(false);
-      }
-    } catch (error) {
-      console.error("Fetch login status error:", error);
-      setUserName(false);
-    }
-  };
-
   const logOutHandle = async () => {
     try {
-      await authService.logout();
-      setUserName(false);
-      localStorage.setItem("refreshAuth", "true");
-      navigate("/", { replace: true, state: { refreshAuth: true } });
+      await logout();
+      navigate("/", { replace: true });
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
-  useEffect(() => {
-    // Luôn fetch khi component mount lần đầu
-    fetchLoginStatus();
-  }, []);
 
-  useEffect(() => {
-    // Kiểm tra tín hiệu refresh từ location state hoặc localStorage
-    const shouldRefresh =
-      location.state?.refreshAuth ||
-      localStorage.getItem("refreshAuth") === "true";
-
-    if (shouldRefresh) {
-      fetchLoginStatus();
-      // Clear tín hiệu sau khi đã fetch
-      localStorage.removeItem("refreshAuth");
-      if (location.state?.refreshAuth) {
-        navigate(location.pathname, {
-          replace: true,
-          state: { ...location.state, refreshAuth: undefined },
-        });
-      }
-    }
-  }, [location.state, navigate]);
+  const userName = user?.fullName;
   return (
     <nav id="top">
       <div className="container">
