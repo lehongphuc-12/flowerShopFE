@@ -1,14 +1,26 @@
+import { faCheckCircle, faExclamationCircle, faInfoCircle, faTimes, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import './Toast-slide.css';
 
-// Lưu ý: Đảm bảo đã cài đặt Bootstrap và import CSS của nó ở project
-
-const typeMap = {
-  success: 'bg-success text-white',
-  error: 'bg-danger text-white',
-  warning: 'bg-warning text-dark',
-  info: 'bg-info text-white',
+const config = {
+  success: {
+    icon: faCheckCircle,
+    color: 'success'
+  },
+  error: {
+    icon: faExclamationCircle,
+    color: 'error'
+  },
+  warning: {
+    icon: faExclamationTriangle,
+    color: 'warning'
+  },
+  info: {
+    icon: faInfoCircle,
+    color: 'info'
+  },
 };
 
 function Toast({ message, type }) {
@@ -21,47 +33,49 @@ function Toast({ message, type }) {
     if (message) {
       const timer = setTimeout(() => {
         setAnimation('toast-slide-out');
-      }, 2000);
+      }, 3000); 
       return () => clearTimeout(timer);
     }
   }, [message]);
 
-  // Ẩn hẳn khi animation kết thúc
   const handleAnimationEnd = () => {
     if (animation === 'toast-slide-out') {
       setShow(false);
     }
   };
 
-  if (!show) return null;
+  if (!show || !message) return null;
+
+  const currentType = config[type] || config.info;
 
   return (
     <div
-      className={`toast show align-items-center ${typeMap[type] || 'bg-secondary text-white'} ${animation}`}
+      className={`app-toast toast-type-${currentType.color} ${animation}`}
       role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-      style={{ position: 'fixed', top: 20, right: 20, minWidth: 100, minHeight: 50 ,zIndex: 9999, borderRadius: "5px" }}
       onAnimationEnd={handleAnimationEnd}
     >
-      <div className="d-flex">
+      <div className="toast-content">
+        <div className="toast-icon">
+          <FontAwesomeIcon icon={currentType.icon} />
+        </div>
         <div className="toast-body">
           {message}
         </div>
         <button
-          type="button"
-          className="btn-close btn-close-white me-2 m-auto"
-          data-bs-dismiss="toast"
-          aria-label="Close"
+          className="toast-close"
           onClick={() => setAnimation('toast-slide-out')}
-        ></button>
+          aria-label="Close"
+        >
+          <FontAwesomeIcon icon={faTimes} />
+        </button>
       </div>
+      <div className="toast-progress-bar"></div>
     </div>
   );
 }
 
 Toast.propTypes = {
-  message: PropTypes.string.isRequired,
+  message: PropTypes.string,
   type: PropTypes.oneOf(['success', 'error', 'warning', 'info']),
 };
 
