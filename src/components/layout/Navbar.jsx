@@ -45,7 +45,7 @@ function Navbar() {
                     }}
                   >
                     <li>
-                      <a href="/profile">Hồ sơ</a>
+                      <Link to="/hoso">Hồ sơ</Link>
                     </li>
                     <li>
                       <a onClick={logOutHandle}>Đăng xuất</a>

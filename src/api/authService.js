@@ -13,6 +13,12 @@ const authService = {
   logout: async () => {
     return apiClient.post("/users/logout");
   },
+  getProfile: async () => {
+    return apiClient.get("/users/profile");
+  },
+  updateProfile: async (profileData) => {
+    return apiClient.put("/users/profile", profileData);
+  },
 };
 
 export default authService;

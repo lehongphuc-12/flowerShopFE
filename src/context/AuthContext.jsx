@@ -1,13 +1,14 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import authService from "../api/authService";
 
-const AuthContext = createContext();
+const AuthContext = createContext(undefined);
 
-export const AuthProvider = ({ children }) => {
+function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserStatus = async () => {
+  const fetchUserStatus = useCallback(async () => {
     setLoading(true);
     try {
       const data = await authService.getLoginStatus();
@@ -22,44 +23,49 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchUserStatus();
-  }, []);
+  }, [fetchUserStatus]);
 
-  const login = async (credentials) => {
+  const login = useCallback(async (credentials) => {
     const data = await authService.login(credentials);
     if (data.state) {
       await fetchUserStatus();
     }
     return data;
-  };
+  }, [fetchUserStatus]);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await authService.logout();
       setUser(null);
     } catch (error) {
       console.error("Logout failed:", error);
     }
-  };
+  }, []);
 
-  const value = {
-    user,
-    loading,
-    login,
-    logout,
-    refreshStatus: fetchUserStatus,
-  };
+  const value = React.useMemo(
+    () => ({
+      user,
+      loading,
+      login,
+      logout,
+      refreshStatus: fetchUserStatus,
+    }),
+    [user, loading, login, logout, fetchUserStatus]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
 
-export const useAuth = () => {
+function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-};
+}
+
+export { AuthProvider, useAuth };
