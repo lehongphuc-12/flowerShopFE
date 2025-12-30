@@ -1,16 +1,101 @@
-
-
-.toast-slide-in {
-  animation: toastSlideIn 0.4s ease-out forwards;
+.app-toast {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  min-width: 320px;
+  max-width: 450px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  z-index: 10000;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
+
+.toast-content {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px 20px;
+  gap: 15px;
+}
+
+.toast-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.toast-body {
+  flex-grow: 1;
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+  line-height: 1.4;
+  padding-right: 10px;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -2px;
+}
+
+.toast-close:hover {
+  color: #333;
+  transform: scale(1.1);
+}
+
+/* Types */
+.toast-type-success .toast-icon { color: #2ecc71; }
+.toast-type-error .toast-icon { color: #e74c3c; }
+.toast-type-warning .toast-icon { color: #f1c40f; }
+.toast-type-info .toast-icon { color: #3498db; }
+
+.toast-type-success { border-left: 5px solid #2ecc71; }
+.toast-type-error { border-left: 5px solid #e74c3c; }
+.toast-type-warning { border-left: 5px solid #f1c40f; }
+.toast-type-info { border-left: 5px solid #3498db; }
+
+/* Progress Bar */
+.toast-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+}
+
+.toast-type-success .toast-progress-bar { background: #2ecc71; }
+.toast-type-error .toast-progress-bar { background: #e74c3c; }
+.toast-type-warning .toast-progress-bar { background: #f1c40f; }
+.toast-type-info .toast-progress-bar { background: #3498db; }
+
+/* Animations */
+.toast-slide-in {
+  animation: toastSlideIn 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+
 .toast-slide-out {
-  animation: toastSlideOut 0.4s ease-in forwards;
+  animation: toastSlideOut 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+}
+
+.toast-slide-in .toast-progress-bar {
+  animation: toastProgress 3s linear forwards;
 }
 
 @keyframes toastSlideIn {
   from {
     transform: translateX(120%);
-    opacity: 0.5;
+    opacity: 0;
   }
   to {
     transform: translateX(0);
@@ -26,5 +111,19 @@
   to {
     transform: translateX(120%);
     opacity: 0;
+  }
+}
+
+@keyframes toastProgress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@media (max-width: 576px) {
+  .app-toast {
+    left: 20px;
+    right: 20px;
+    top: 20px;
+    min-width: auto;
   }
 }

@@ -35,7 +35,7 @@
   align-items: center;
   gap: 16px;
   padding: 0 0 10px 0;
-  justify-content: flex-start;
+  justify-content: space-between;
 }
 .filter-group {
   display: flex;
@@ -86,7 +86,7 @@
   margin-right: 3px;
   accent-color: #e91e63;
 }
-.clear-filters-btn {
+.filters-btn {
   margin-left: auto;
   background: #fff6f9;
   border: 1px solid #e91e63;
@@ -102,12 +102,15 @@
   gap: 6px;
   transition: all .2s;
 }
-.clear-filters-btn:hover {
+.filters-btn:hover {
   background: #e91e63;
   color: white;
   border-color: #e91e63;
 }
-
+.fillter_space_btn {
+  display: flex;
+  gap: 10%;
+}
 /* Scrollbar styling */
 .filter-options::-webkit-scrollbar {
   width: 6px;
@@ -165,11 +168,33 @@
   .filters-row {
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
+    gap: 12px;
   }
   .filter-group {
     min-width: unset;
     width: 100%;
+  }
+  .filter-group label {
+    font-size: 11px; /* Nhãn cực nhỏ cho gọn */
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .filter-group select {
+    font-size: 13px; /* Giảm thêm 1px */
+    padding: 6px 8px; /* Giảm padding cho gọn hơn */
+    height: 36px; /* Cố định chiều cao cho đồng nhất */
+    width: 100%; /* Giãn hết chiều ngang trên mobile */
+    max-width: 100%;
+  }
+  .filter-group select option {
+    font-size: 13px;
+    padding: 10px; /* Thử thêm padding cho option (hỗ trợ tùy trình duyệt) */
+  }
+  .filter-discount {
+    margin-top: 5px; /* Giảm khoảng cách cho gọn */
+  }
+  .filter-discount label {
+    font-size: 13px;
   }
   .clear-filters-btn {
     width: 100%;

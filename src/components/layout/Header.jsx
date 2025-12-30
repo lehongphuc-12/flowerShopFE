@@ -9,8 +9,12 @@ import {
   faBagShopping,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect } from "react";
+import { useCart } from "../../context/CartContext";
 
 const Header = () => {
+  const { cart } = useCart();
+  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   return (
     <header>
       <div className="container">
@@ -93,35 +97,32 @@ const Header = () => {
                 <li>
                   <table>
                     <tbody>
-                      <tr>
-                        <td>
-                          <img
-                            src="https://via.placeholder.com/36"
-                            width="36"
-                            alt="Example1"
-                          />
-                        </td>
-                        <td className="product-name">Hoa Hồng Đỏ</td>
-                        <td>2</td>
-                        <td className="price">180,000₫</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <img
-                            src="https://via.placeholder.com/36/ffc1e3/803655"
-                            width="36"
-                            alt="Example2"
-                          />
-                        </td>
-                        <td className="product-name">Hoa Baby Xanh</td>
-                        <td>1</td>
-                        <td className="price">90,000₫</td>
-                      </tr>
+                      {cart.map((item) => {
+                        const itemId = item.id || item.flowerId;
+                        return (
+                          <tr>
+                            <td>
+                              <img
+                                src={item.imageUrl}
+                                width="36"
+                                alt={item.flowerName}
+                              />
+                            </td>
+                            <td className="product-name">{item.flowerName}</td>
+                            <td>{item.quantity}</td>
+                            <td className="price">
+                              {item.price.toLocaleString()}₫
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                     <tfoot>
                       <tr className="tong-tien">
                         <td colSpan="3">Tổng Tiền</td>
-                        <td className="tong-tien-value">270,000₫</td>
+                        <td className="tong-tien-value">
+                          {total.toLocaleString()}₫
+                        </td>
                       </tr>
                     </tfoot>
                   </table>

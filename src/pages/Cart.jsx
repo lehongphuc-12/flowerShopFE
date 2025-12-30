@@ -1,25 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
+import { useCart } from "../context/CartContext";
 import "./Cart.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 const Cart = () => {
-  const [qty, setQty] = useState("1");
-  const [newQty, setNewQty] = useState(qty);
-  const handleQtyChange = (e) => {
-    setNewQty(e.target.value);
-  };
-  const handleQtyUpdate = () => {
-    setQty(newQty);
-  };
+  const { cart, updateQuantity, removeFromCart, totalValue: total } = useCart();
 
-  const getValidQty = () => {
-    const num = parseInt(qty, 10);
-    return !isNaN(num) && num > 0 && num <= 100 ? num : 0;
+  const handleQtyChange = (e, id) => {
+    const value = e.target.value;
+    const newQty = value === "" ? "" : parseInt(value);
+    if (newQty !== "" && !isNaN(newQty)) {
+      updateQuantity(id, newQty);
+    }
   };
 
-  const total = 120000 * getValidQty();
+  const handleUpdateClick = (id, currentQty) => {
+    updateQuantity(id, currentQty);
+  };
 
+  const handleRemove = (id) => {
+    removeFromCart(id);
+  };
   return (
     <div className="container">
       <div className="content">
@@ -29,52 +31,67 @@ const Cart = () => {
             <tr>
               <td>Hình ảnh</td>
               <td>Sản phẩm</td>
-              <td>Mã sản phẩm</td>
+              {/* <td>Mã sản phẩm</td> */}
               <td>Số Lượng</td>
               <td className="price-cell">Đơn Giá</td>
               <td className="total-cell">Tổng cộng</td>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>
-                <img
-                  src="https://images.unsplash.com/photo-1506744038136-46273834b3fb"
-                  alt="Hoa Hồng Đỏ"
-                />
-              </td>
-              <td className="product-name-cell">Hoa Hồng Đỏ</td>
-              <td>ROSE01</td>
-              <td>
-                <form action="">
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      min="1"
-                      max="100"
-                      value={newQty}
-                      onChange={handleQtyChange}
-                    />
-                    <button type="button" onClick={handleQtyUpdate}>
-                      <FontAwesomeIcon icon={faRotate} />
-                    </button>
-                    <button type="button">
-                      <FontAwesomeIcon icon={faCircleXmark} />
-                    </button>
-                  </div>
-                </form>
-              </td>
-              <td className="price-cell">120,000₫</td>
-              <td className="total-cell">{total.toLocaleString()}₫</td>
-            </tr>
+            {cart.map((item) => {
+              const itemId = item.id || item.flowerId;
+              return (
+                <tr key={itemId}>
+                  <td>
+                    <img src={item.imageUrl} alt={item.flowerName} />
+                  </td>
+                  <td className="product-name-cell">{item.flowerName}</td>
+                  {/* <td>{item.flowerId}</td> */}
+                  <td>
+                    <form action="">
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          min="1"
+                          max="100"
+                          value={item.quantity}
+                          onChange={(e) => handleQtyChange(e, itemId)}
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleUpdateClick(itemId, item.quantity)
+                          }
+                        >
+                          <FontAwesomeIcon icon={faRotate} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRemove(itemId)}
+                        >
+                          <FontAwesomeIcon icon={faCircleXmark} />
+                        </button>
+                      </div>
+                    </form>
+                  </td>
+                  <td className="price-cell">{item.price.toLocaleString()}₫</td>
+                  <td className="total-cell">
+                    {(
+                      item.price * (Number(item.quantity) || 0)
+                    ).toLocaleString()}
+                    ₫
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={5}>Tổng phụ</td>
+              <td colSpan={4}>Tổng phụ</td>
               <td className="total-cell">{total.toLocaleString()}₫</td>
             </tr>
             <tr>
-              <td colSpan={5}>Tổng</td>
+              <td colSpan={4}>Tổng</td>
               <td className="total-cell">{total.toLocaleString()}₫</td>
             </tr>
           </tfoot>

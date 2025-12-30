@@ -1,26 +1,43 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 import Card from "../ui/Card";
+import Toast from "../common/Toast";
 import "./ProductCard.css";
 
 export default function ProductCard({ product }) {
-  const { name, price, discount, id } = product;
+  const flowerId = product.flowerId || product.id;
+  const flowerName = product.flowerName || product.name;
+  const imageUrl = product.imageUrl || product.url;
+  const price = product.price || 0;
+  const discount = product.discount || 0;
+
   const finalPrice = price - (price * discount) / 100;
+
+  const [message, setMessage] = useState("");
+  const [toastType, setToastType] = useState("");
+
+  const { addToCart } = useCart();
 
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // TODO: Implement add to cart functionality
-    console.log("Thêm vào giỏ:", product);
-    // Có thể thêm toast notification hoặc update cart state ở đây
+
+    addToCart(product);
+    setMessage("Thêm vào giỏ hàng thành công!");
+    setToastType("success");
+
+    // Clear message after some time to allow toast to disappear and be triggered again
+    setTimeout(() => setMessage(""), 3500);
   };
 
   return (
     <Card>
-      <Link to={`/product/${id}`} className="product-card-link">
+      <Link to={`/product/${flowerId}`} className="product-card-link">
         <div className="product-card">
-          <img src={product.url} alt={name} />
+          <img src={imageUrl || product.url} alt={flowerName} />
 
-          <h5>{name}</h5>
+          <h5>{flowerName}</h5>
 
           <div className="price-container">
             <p className="final-price">{finalPrice.toLocaleString()}đ</p>
@@ -39,6 +56,7 @@ export default function ProductCard({ product }) {
           </button>
         </div>
       </Link>
+      {message && <Toast message={message} type={toastType} />}
     </Card>
   );
 }

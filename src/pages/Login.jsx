@@ -3,10 +3,12 @@ import "./Login.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Toast from "../components/common/Toast";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -16,6 +18,8 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [toastType, setToastType] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || "/";
 
   const handleChange = (e) => {
     setFormData({
@@ -29,30 +33,23 @@ const Login = () => {
     setLoading(true);
     setMessage("");
     try {
-      console.log(formData);
-      // Gọi API login ở đây, user sẽ thay URL sau
-      const response = await fetch("http://localhost:8080/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      // Giả sử data.state là kết quả true/false
+      // Gọi API login qua context
+      const data = await login(formData);
+      
       if (data.state) {
         setMessage("Đăng nhập thành công");
         setToastType("success");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        navigate("/");
+        // Chờ 1 chút để toast hiện lên rồi chuyển trang
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        navigate(from, { replace: true });
       } else {
         setToastType("error");
         setMessage(data.message || "Đăng nhập thất bại. Vui lòng thử lại!");
-        return;
       }
     } catch (error) {
-      setMessage("Có lỗi xảy ra. Vui lòng thử lại!");
+      console.error("Login error:", error);
+      setMessage(error.message || "Có lỗi xảy ra. Vui lòng thử lại!");
+      setToastType("error");
     }
     setLoading(false);
   };
@@ -158,7 +155,7 @@ const Login = () => {
               <button type="submit" className="login-button" disabled={loading}>
                 {loading ? "Đang đăng nhập..." : "Đăng nhập"}
               </button>
-              {message && <Toast message={message} type={toastType}/>}
+              {message && <Toast message={message} type={toastType} />}
             </form>
 
             <div className="signup-link">
