@@ -2,6 +2,7 @@ import { faCheckCircle, faExclamationCircle, faInfoCircle, faTimes, faExclamatio
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import './Toast-slide.css';
 
 const config = {
@@ -48,7 +49,7 @@ function Toast({ message, type }) {
 
   const currentType = config[type] || config.info;
 
-  return (
+  const toastElement = (
     <div
       className={`app-toast toast-type-${currentType.color} ${animation}`}
       role="alert"
@@ -72,6 +73,8 @@ function Toast({ message, type }) {
       <div className="toast-progress-bar"></div>
     </div>
   );
+
+  return createPortal(toastElement, document.body);
 }
 
 Toast.propTypes = {
