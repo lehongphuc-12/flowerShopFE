@@ -110,6 +110,21 @@
   color: #d56387;
 }
 
+.user-dropdown-toggle img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.user-dropdown-toggle:hover img {
+  border-color: #d56387;
+  transform: scale(1.05);
+}
+
 .user-dropdown-menu {
   position: absolute;
   top: calc(100% + 5px);
@@ -130,7 +145,7 @@
 
 /* Arrow for the dropdown menu */
 .user-dropdown-menu::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -6px;
   right: 20px;

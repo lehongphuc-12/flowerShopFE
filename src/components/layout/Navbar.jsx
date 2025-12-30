@@ -49,6 +49,7 @@ function Navbar() {
   };
 
   const userName = user?.fullName;
+  const avatarUrl = user?.imgUrl;
   return (
     <nav id="top">
       <div className="container">
@@ -59,20 +60,24 @@ function Navbar() {
               {userName ? (
                 <div className="user-dropdown">
                   <div className="user-dropdown-toggle">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-6 nav-icon"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17.982 18.725A7.488 7.488 0 0 1 12 15.75c-2.213 0-4.204.957-5.582 2.475M15 9a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM2.25 12a9.75 9.75 0 1 1 19.5 0 9.75 9.75 0 0 1-19.5 0Z"
-                      />
-                    </svg>
+                    {user?.imgUrl ? (
+                      <img src={avatarUrl} alt="" />
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-6 nav-icon"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M17.982 18.725A7.488 7.488 0 0 1 12 15.75c-2.213 0-4.204.957-5.582 2.475M15 9a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM2.25 12a9.75 9.75 0 1 1 19.5 0 9.75 9.75 0 0 1-19.5 0Z"
+                        />
+                      </svg>
+                    )}
                     <span>{userName}</span>
                   </div>
                   <ul className="user-dropdown-menu">
