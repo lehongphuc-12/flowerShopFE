@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../layout/Navbar.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 
 function Navbar() {
   const { user, logout } = useAuth();
@@ -18,15 +18,30 @@ function Navbar() {
   };
 
   const [notifications, setNotifications] = useState([
-    { id: 1, text: "Chào mừng bạn quay trở lại!", read: false, time: "Vừa xong" },
-    { id: 2, text: "Đơn hàng #SH123 đang được chuẩn bị", read: false, time: "5 phút trước" },
-    { id: 3, text: "Bó hoa 'Nắng Hạ' đã có hàng lại", read: true, time: "1 giờ trước" },
+    {
+      id: 1,
+      text: "Chào mừng bạn quay trở lại!",
+      read: false,
+      time: "Vừa xong",
+    },
+    {
+      id: 2,
+      text: "Đơn hàng #SH123 đang được chuẩn bị",
+      read: false,
+      time: "5 phút trước",
+    },
+    {
+      id: 3,
+      text: "Bó hoa 'Nắng Hạ' đã có hàng lại",
+      read: true,
+      time: "1 giờ trước",
+    },
   ]);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const markAllRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, read: true })));
+    setNotifications(notifications.map((n) => ({ ...n, read: true })));
   };
 
   const clearAll = () => {
@@ -40,7 +55,6 @@ function Navbar() {
         <div className="nav float-left">Hotline: 0788580223</div>
         <div className="nav float-right">
           <ul className="list-inline">
-            
             <li className="list-inline-item">
               {userName ? (
                 <div className="user-dropdown">

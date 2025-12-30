@@ -1,11 +1,25 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./Hoso.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faEnvelope, faPhone, faEdit, faSave, faTimes, faLock, faHistory, faBell, faHeart, faChevronRight, faMapMarkerAlt, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faEnvelope,
+  faPhone,
+  faEdit,
+  faSave,
+  faTimes,
+  faLock,
+  faHistory,
+  faBell,
+  faHeart,
+  faChevronRight,
+  faMapMarkerAlt,
+  faArrowLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import Toast from "../components/common/Toast";
 import LoadingSpinner from "../components/common/LoadingSpinner";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import authService from "../api/authService";
 
 const Hoso = () => {
@@ -99,7 +113,9 @@ const Hoso = () => {
 
     if (!formData.phone.trim()) {
       newErrors.phone = "Vui lòng nhập số điện thoại";
-    } else if (!/^[0-9]{10,11}$/.test(formData.phoneNumber.replace(/\s/g, ""))) {
+    } else if (
+      !/^[0-9]{10,11}$/.test(formData.phoneNumber.replace(/\s/g, ""))
+    ) {
       newErrors.phone = "Số điện thoại không hợp lệ (10-11 số)";
     }
 
@@ -291,11 +307,7 @@ const Hoso = () => {
               <FontAwesomeIcon icon={faTimes} />
               Hủy
             </button>
-            <button
-              type="submit"
-              className="save-button"
-              disabled={loading}
-            >
+            <button type="submit" className="save-button" disabled={loading}>
               <FontAwesomeIcon icon={faSave} />
               {loading ? "Đang lưu..." : "Lưu thay đổi"}
             </button>
@@ -309,7 +321,9 @@ const Hoso = () => {
     <div className="hoso-card">
       <div className="hoso-header">
         <h2 className="hoso-title">Đổi mật khẩu</h2>
-        <p className="hoso-subtitle">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
+        <p className="hoso-subtitle">
+          Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác
+        </p>
       </div>
       <form className="hoso-form">
         <div className="form-group">
@@ -324,7 +338,9 @@ const Hoso = () => {
           <label>Xác nhận mật khẩu mới</label>
           <input type="password" placeholder="Xác nhận mật khẩu mới" />
         </div>
-        <button type="button" className="save-button">Đổi mật khẩu</button>
+        <button type="button" className="save-button">
+          Đổi mật khẩu
+        </button>
       </form>
     </div>
   );
@@ -340,7 +356,12 @@ const Hoso = () => {
           <FontAwesomeIcon icon={faHistory} />
         </div>
         <p>Bạn chưa có đơn hàng nào.</p>
-        <button onClick={() => navigate("/categories")} className="shop-now-button">Mua sắm ngay</button>
+        <button
+          onClick={() => navigate("/categories")}
+          className="shop-now-button"
+        >
+          Mua sắm ngay
+        </button>
       </div>
     </div>
   );
@@ -371,7 +392,12 @@ const Hoso = () => {
           <FontAwesomeIcon icon={faHeart} />
         </div>
         <p>Danh sách yêu thích đang trống.</p>
-        <button onClick={() => navigate("/categories")} className="shop-now-button">Khám phá ngay</button>
+        <button
+          onClick={() => navigate("/categories")}
+          className="shop-now-button"
+        >
+          Khám phá ngay
+        </button>
       </div>
     </div>
   );
@@ -397,8 +423,8 @@ const Hoso = () => {
   return (
     <div className="hoso-page">
       <div className="container" style={{ maxWidth: "1200px" }}>
-        <button 
-          className="back-page-button" 
+        <button
+          className="back-page-button"
           onClick={() => navigate(-1)}
           title="Quay lại"
         >
@@ -413,16 +439,19 @@ const Hoso = () => {
             </div>
             <div className="user-text-info">
               <p className="user-name">{user?.fullName || "Khách"}</p>
-              <p className="user-edit-link" onClick={() => setActiveTab("profile")}>
+              <p
+                className="user-edit-link"
+                onClick={() => setActiveTab("profile")}
+              >
                 <FontAwesomeIcon icon={faEdit} /> Sửa hồ sơ
               </p>
             </div>
           </div>
-          
+
           <ul className="sidebar-menu">
             {sidebarItems.map((item) => (
-              <li 
-                key={item.id} 
+              <li
+                key={item.id}
                 className={activeTab === item.id ? "active" : ""}
                 onClick={() => {
                   setActiveTab(item.id);
@@ -455,4 +484,3 @@ const Hoso = () => {
 };
 
 export default Hoso;
-

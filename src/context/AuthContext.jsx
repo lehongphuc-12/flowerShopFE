@@ -1,10 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 import authService from "../api/authService";
 
-const AuthContext = createContext(undefined);
+export const AuthContext = createContext(undefined);
 
-function AuthProvider({ children }) {
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -12,8 +12,11 @@ function AuthProvider({ children }) {
     setLoading(true);
     try {
       const data = await authService.getLoginStatus();
-      if (data.status) {
-        setUser({ fullName: data.fullName }); 
+      if (data.state || data.status) {
+        setUser({
+          fullName: data.fullName || data.username || data.name,
+          ...data,
+        });
       } else {
         setUser(null);
       }
@@ -29,13 +32,35 @@ function AuthProvider({ children }) {
     fetchUserStatus();
   }, [fetchUserStatus]);
 
-  const login = useCallback(async (credentials) => {
-    const data = await authService.login(credentials);
-    if (data.state) {
-      await fetchUserStatus();
-    }
-    return data;
-  }, [fetchUserStatus]);
+  const login = useCallback(
+    async (credentials) => {
+      const data = await authService.login(credentials);
+      if (data.state) {
+        await fetchUserStatus();
+      }
+      return data;
+    },
+    [fetchUserStatus]
+  );
+
+  const loginWithGoogle = useCallback(
+    async (token) => {
+      try {
+        const data = await authService.googleLogin(token);
+        if (data.state) {
+          await fetchUserStatus();
+        }
+        return data;
+      } catch (error) {
+        console.error("Google login failed:", error);
+        return {
+          state: false,
+          message: error.message || "Google login failed",
+        };
+      }
+    },
+    [fetchUserStatus]
+  );
 
   const logout = useCallback(async () => {
     try {
@@ -51,21 +76,12 @@ function AuthProvider({ children }) {
       user,
       loading,
       login,
+      loginWithGoogle,
       logout,
       refreshStatus: fetchUserStatus,
     }),
-    [user, loading, login, logout, fetchUserStatus]
+    [user, loading, login, loginWithGoogle, logout, fetchUserStatus]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
-
-function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-}
-
-export { AuthProvider, useAuth };
