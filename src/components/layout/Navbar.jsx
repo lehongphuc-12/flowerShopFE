@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../layout/Navbar.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 
 function Navbar() {
   const { user, logout } = useAuth();
@@ -18,15 +18,30 @@ function Navbar() {
   };
 
   const [notifications, setNotifications] = useState([
-    { id: 1, text: "Chào mừng bạn quay trở lại!", read: false, time: "Vừa xong" },
-    { id: 2, text: "Đơn hàng #SH123 đang được chuẩn bị", read: false, time: "5 phút trước" },
-    { id: 3, text: "Bó hoa 'Nắng Hạ' đã có hàng lại", read: true, time: "1 giờ trước" },
+    {
+      id: 1,
+      text: "Chào mừng bạn quay trở lại!",
+      read: false,
+      time: "Vừa xong",
+    },
+    {
+      id: 2,
+      text: "Đơn hàng #SH123 đang được chuẩn bị",
+      read: false,
+      time: "5 phút trước",
+    },
+    {
+      id: 3,
+      text: "Bó hoa 'Nắng Hạ' đã có hàng lại",
+      read: true,
+      time: "1 giờ trước",
+    },
   ]);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const markAllRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, read: true })));
+    setNotifications(notifications.map((n) => ({ ...n, read: true })));
   };
 
   const clearAll = () => {
@@ -34,31 +49,35 @@ function Navbar() {
   };
 
   const userName = user?.fullName;
+  const avatarUrl = user?.imgUrl;
   return (
     <nav id="top">
       <div className="container">
         <div className="nav float-left">Hotline: 0788580223</div>
         <div className="nav float-right">
           <ul className="list-inline">
-            
             <li className="list-inline-item">
               {userName ? (
                 <div className="user-dropdown">
                   <div className="user-dropdown-toggle">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="size-6 nav-icon"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17.982 18.725A7.488 7.488 0 0 1 12 15.75c-2.213 0-4.204.957-5.582 2.475M15 9a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM2.25 12a9.75 9.75 0 1 1 19.5 0 9.75 9.75 0 0 1-19.5 0Z"
-                      />
-                    </svg>
+                    {user?.imgUrl ? (
+                      <img src={avatarUrl} alt="" />
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-6 nav-icon"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M17.982 18.725A7.488 7.488 0 0 1 12 15.75c-2.213 0-4.204.957-5.582 2.475M15 9a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM2.25 12a9.75 9.75 0 1 1 19.5 0 9.75 9.75 0 0 1-19.5 0Z"
+                        />
+                      </svg>
+                    )}
                     <span>{userName}</span>
                   </div>
                   <ul className="user-dropdown-menu">

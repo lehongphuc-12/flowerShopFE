@@ -19,6 +19,9 @@ const authService = {
   updateProfile: async (profileData) => {
     return apiClient.put("/users/profile", profileData);
   },
+  googleLogin: async (token) => {
+    return apiClient.post("/users/loginWithGoogle", { token });
+  },
 };
 
 export default authService;
