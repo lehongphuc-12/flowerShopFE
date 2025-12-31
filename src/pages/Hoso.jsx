@@ -23,6 +23,7 @@ import PasswordSection from "./hoso/sections/PasswordSection";
 import OrderSection from "./hoso/sections/OrderSection";
 import NotificationSection from "./hoso/sections/NotificationSection";
 import WishlistSection from "./hoso/sections/WishlistSection";
+import axios from "axios";
 
 const Hoso = () => {
   const { user, loading: authLoading, refreshStatus } = useAuth();
@@ -32,6 +33,10 @@ const Hoso = () => {
   const [fetching, setFetching] = useState(false);
   const [message, setMessage] = useState("");
   const [toastType, setToastType] = useState("");
+
+  // [FIX] Store the actual file object for upload
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -110,6 +115,9 @@ const Hoso = () => {
         return;
       }
 
+      // [FIX] Update selected file state
+      setSelectedFile(file);
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData({
@@ -140,10 +148,6 @@ const Hoso = () => {
       newErrors.phone = "Số điện thoại không hợp lệ (10-11 số)";
     }
 
-    if (!formData.address.trim()) {
-      newErrors.address = "Vui lòng nhập địa chỉ";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -156,14 +160,45 @@ const Hoso = () => {
       return;
     }
 
+    // [FIX] Check for file changes as well
+    const isChanged =
+      Object.keys(formData).some(
+        (key) => formData[key] !== (backupData ? backupData[key] : "")
+      ) || selectedFile !== null;
+
+    if (!isChanged) {
+      setMessage("Không có thay đổi nào để cập nhật");
+      setToastType("info");
+      setIsEditing(false);
+      return;
+    }
+
     setLoading(true);
     setMessage("");
     try {
-      const data = await authService.updateProfile(formData);
+      // [FIX] Create FormData object
+      const submitData = new FormData();
+      submitData.append("fullName", formData.fullName);
+      submitData.append("email", formData.email);
+      submitData.append("phone", formData.phone);
+      submitData.append("address", formData.address || "");
+
+      // Only append file if one was selected
+      if (selectedFile) {
+        submitData.append("imgUrl", selectedFile);
+      }
+
+      // [FIX] Send FormData. Axios automatically sets Content-Type to multipart/form-data
+      const response = await axios.put("/api/users/updateProfile", submitData);
+
+      // Handle response correctly (response.data contains the body)
+      const data = response.data;
+
       if (data.state) {
         setMessage("Cập nhật thông tin thành công");
         setToastType("success");
         setIsEditing(false);
+        setSelectedFile(null); // Reset file selection
         await refreshStatus();
       } else {
         setMessage(data.message || "Cập nhật thất bại. Vui lòng thử lại!");
@@ -182,6 +217,7 @@ const Hoso = () => {
       setFormData(backupData);
     }
     setIsEditing(false);
+    setSelectedFile(null); // [FIX] Clear selected file
     setErrors({});
   };
 
