@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -9,18 +9,201 @@ import {
   faSave,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../../../hooks/useAuth";
+import authService from "../../../api/authService";
+import axios from "axios";
+import Toast from "../../../components/common/Toast";
+import LoadingSpinner from "../../../components/common/LoadingSpinner";
 
-const ProfileSection = ({
-  formData,
-  isEditing,
-  loading,
-  errors,
-  handleChange,
-  handleFileChange,
-  handleSubmit,
-  handleCancel,
-  setIsEditing,
-}) => {
+const ProfileSection = () => {
+  const { user, refreshStatus } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
+  const [message, setMessage] = useState("");
+  const [toastType, setToastType] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+    imgUrl: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [backupData, setBackupData] = useState(null);
+  const [hasFetched, setHasFetched] = useState(false);
+
+  const fetchUserProfile = useCallback(async () => {
+    setFetching(true);
+    try {
+      const profileData = await authService.getProfile();
+      if (profileData) {
+        setFormData({
+          fullName: profileData.fullName || user?.fullName || "",
+          email: profileData.email || "",
+          phone: profileData.phone || "",
+          address: profileData.address || "",
+          imgUrl: profileData.imgUrl || user?.imgUrl || "",
+        });
+      } else {
+        setFormData({
+          fullName: user?.fullName || "",
+          email: "",
+          phone: "",
+          imgUrl: user?.imgUrl || "",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      setFormData({
+        fullName: user?.fullName || "",
+        email: "",
+        phone: "",
+      });
+    } finally {
+      setFetching(false);
+      setHasFetched(true);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user && !hasFetched) {
+      fetchUserProfile();
+    }
+  }, [user, hasFetched, fetchUserProfile]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: "",
+      });
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        setMessage("Ảnh quá lớn. Vui lòng chọn ảnh dưới 2MB");
+        setToastType("error");
+        return;
+      }
+
+      setSelectedFile(file);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({
+          ...formData,
+          imgUrl: reader.result,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = "Vui lòng nhập họ và tên";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Vui lòng nhập email";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Email không hợp lệ";
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Vui lòng nhập số điện thoại";
+    } else if (!/^[0-9]{10,11}$/.test(formData.phone.replace(/\s/g, ""))) {
+      newErrors.phone = "Số điện thoại không hợp lệ (10-11 số)";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) {
+      setMessage("Vui lòng kiểm tra lại thông tin");
+      setToastType("error");
+      return;
+    }
+
+    const isChanged =
+      Object.keys(formData).some(
+        (key) => formData[key] !== (backupData ? backupData[key] : "")
+      ) || selectedFile !== null;
+
+    if (!isChanged) {
+      setMessage("Không có thay đổi nào để cập nhật");
+      setToastType("info");
+      setIsEditing(false);
+      return;
+    }
+
+    setLoading(true);
+    setMessage("");
+    try {
+      const submitData = new FormData();
+      submitData.append("fullName", formData.fullName);
+      submitData.append("email", formData.email);
+      submitData.append("phone", formData.phone);
+      submitData.append("address", formData.address || "");
+
+      if (selectedFile) {
+        submitData.append("imgUrl", selectedFile);
+      }
+
+      const response = await axios.put("/api/users/updateProfile", submitData);
+      const data = response.data;
+
+      if (data.state) {
+        setMessage("Cập nhật thông tin thành công");
+        setToastType("success");
+        setIsEditing(false);
+        setSelectedFile(null);
+        refreshStatus();
+      } else {
+        setMessage(data.message || "Cập nhật thất bại. Vui lòng thử lại!");
+        setToastType("error");
+      }
+    } catch (error) {
+      console.error("Update profile error:", error);
+      setMessage(error.message || "Có lỗi xảy ra. Vui lòng thử lại!");
+      setToastType("error");
+    }
+    setLoading(false);
+  };
+
+  const handleCancel = () => {
+    if (backupData) {
+      setFormData(backupData);
+    }
+    setIsEditing(false);
+    setSelectedFile(null);
+    setErrors({});
+  };
+
+  const handleStartEdit = () => {
+    setBackupData({ ...formData });
+    setIsEditing(true);
+  };
+
+  if (fetching) {
+    return <LoadingSpinner message="Đang tải thông tin..." />;
+  }
+
   return (
     <div className="hoso-card">
       <div className="hoso-header">
@@ -172,7 +355,7 @@ const ProfileSection = ({
                 <button
                   type="button"
                   className="edit-button"
-                  onClick={setIsEditing}
+                  onClick={handleStartEdit}
                 >
                   <FontAwesomeIcon icon={faEdit} />
                   Chỉnh sửa thông tin
@@ -202,6 +385,13 @@ const ProfileSection = ({
           </form>
         </div>
       </div>
+      {message && (
+        <Toast
+          message={message}
+          type={toastType}
+          onClose={() => setMessage("")}
+        />
+      )}
     </div>
   );
 };

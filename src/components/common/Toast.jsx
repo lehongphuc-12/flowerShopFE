@@ -1,47 +1,54 @@
-import { faCheckCircle, faExclamationCircle, faInfoCircle, faTimes, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
-import './Toast-slide.css';
+import {
+  faCheckCircle,
+  faExclamationCircle,
+  faInfoCircle,
+  faTimes,
+  faExclamationTriangle,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import "./Toast-slide.css";
 
 const config = {
   success: {
     icon: faCheckCircle,
-    color: 'success'
+    color: "success",
   },
   error: {
     icon: faExclamationCircle,
-    color: 'error'
+    color: "error",
   },
   warning: {
     icon: faExclamationTriangle,
-    color: 'warning'
+    color: "warning",
   },
   info: {
     icon: faInfoCircle,
-    color: 'info'
+    color: "info",
   },
 };
 
-function Toast({ message, type }) {
+function Toast({ message, type, onClose }) {
   const [show, setShow] = useState(true);
-  const [animation, setAnimation] = useState('toast-slide-in');
+  const [animation, setAnimation] = useState("toast-slide-in");
 
   useEffect(() => {
     setShow(true);
-    setAnimation('toast-slide-in');
+    setAnimation("toast-slide-in");
     if (message) {
       const timer = setTimeout(() => {
-        setAnimation('toast-slide-out');
-      }, 3000); 
+        setAnimation("toast-slide-out");
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [message]);
 
   const handleAnimationEnd = () => {
-    if (animation === 'toast-slide-out') {
+    if (animation === "toast-slide-out") {
       setShow(false);
+      if (onClose) onClose();
     }
   };
 
@@ -59,12 +66,10 @@ function Toast({ message, type }) {
         <div className="toast-icon">
           <FontAwesomeIcon icon={currentType.icon} />
         </div>
-        <div className="toast-body">
-          {message}
-        </div>
+        <div className="toast-body">{message}</div>
         <button
           className="toast-close"
-          onClick={() => setAnimation('toast-slide-out')}
+          onClick={() => setAnimation("toast-slide-out")}
           aria-label="Close"
         >
           <FontAwesomeIcon icon={faTimes} />
@@ -79,7 +84,8 @@ function Toast({ message, type }) {
 
 Toast.propTypes = {
   message: PropTypes.string,
-  type: PropTypes.oneOf(['success', 'error', 'warning', 'info']),
+  type: PropTypes.oneOf(["success", "error", "warning", "info"]),
+  onClose: PropTypes.func,
 };
 
 export default Toast;
