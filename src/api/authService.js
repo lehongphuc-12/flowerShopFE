@@ -22,6 +22,9 @@ const authService = {
   googleLogin: async (token) => {
     return apiClient.post("/users/loginWithGoogle", { token });
   },
+  changePassword: async (passwordData) => {
+    return apiClient.put("/users/changePassword", passwordData);
+  },
 };
 
 export default authService;

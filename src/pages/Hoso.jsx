@@ -110,7 +110,9 @@ const Hoso = () => {
 
         <div className="hoso-content">
           {activeTab === "profile" && <ProfileSection />}
-          {activeTab === "password" && <PasswordSection />}
+          {activeTab === "password" && (
+            <PasswordSection isAccountGG={user.isAccountGG} />
+          )}
           {activeTab === "orders" && <OrderSection navigate={navigate} />}
           {activeTab === "notifications" && <NotificationSection />}
           {activeTab === "wishlist" && <WishlistSection navigate={navigate} />}
