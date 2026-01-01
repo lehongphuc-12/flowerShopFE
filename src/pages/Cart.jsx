@@ -1,11 +1,13 @@
 import React from "react";
 import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
 import "./Cart.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 const Cart = () => {
   const { cart, updateQuantity, removeFromCart, totalValue: total } = useCart();
+  const navigate = useNavigate();
 
   const handleQtyChange = (e, id) => {
     const value = e.target.value;
@@ -100,7 +102,7 @@ const Cart = () => {
           <button>
             <a href="/categories">Tiếp tục mua sắm</a>
           </button>
-          <button>Thanh toán</button>
+          <button onClick={() => navigate("/order")}>Thanh toán</button>
         </div>
       </div>
     </div>

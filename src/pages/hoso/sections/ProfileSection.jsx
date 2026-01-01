@@ -200,9 +200,9 @@ const ProfileSection = () => {
     setIsEditing(true);
   };
 
-  if (fetching) {
-    return <LoadingSpinner message="Đang tải thông tin..." />;
-  }
+  // if (fetching) {
+  //   return <LoadingSpinner message="Đang tải thông tin..." />;
+  // }
 
   return (
     <div className="hoso-card">
