@@ -13,6 +13,7 @@ import ProductPage from "../pages/ProductPage.jsx";
 import Cart from "../pages/Cart.jsx";
 import Hoso from "../pages/Hoso.jsx";
 import Order from "../pages/Order.jsx";
+import ConfirmOrder from "../pages/ConfirmOrder.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
         <Route path="cart" element={<Cart />} />
         <Route path="hoso" element={<Hoso />} />
         <Route path="order" element={<Order />} />
+        <Route path="confirm-order" element={<ConfirmOrder />} />
       </Route>
       <Route path="/login" element={<LoginLayout />}>
         <Route index element={<Login />} />

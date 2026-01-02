@@ -1,0 +1,259 @@
+.confirm-order-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.confirm-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.confirm-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.confirm-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.confirm-section h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0 0 1.5rem 0;
+}
+
+.section-header h2 {
+  margin: 0;
+}
+
+.edit-btn {
+  background: transparent;
+  color: #e91e63;
+  border: 1px solid #e91e63;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: #e91e63;
+  color: white;
+}
+
+.info-group {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.info-group label {
+  display: block;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.info-group p {
+  color: #333;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.banking-info-box {
+  background: #f8f9fa;
+  border-left: 4px solid #e91e63;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 4px;
+}
+
+.banking-info-box p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.banking-info-box p:first-child {
+  margin-top: 0;
+}
+
+.order-items-list {
+  margin-bottom: 1.5rem;
+}
+
+.confirm-order-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.confirm-order-item:last-child {
+  border-bottom: none;
+}
+
+.confirm-order-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.confirm-order-item .item-details {
+  flex: 1;
+}
+
+.confirm-order-item .item-details h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.confirm-order-item .item-details p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.confirm-order-item .item-price {
+  font-weight: 600;
+  color: #e91e63;
+  font-size: 1rem;
+}
+
+.order-totals {
+  border-top: 2px solid #f0f0f0;
+  padding-top: 1rem;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  color: #666;
+}
+
+.total-row.final {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #f0f0f0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.total-row.final .total-price {
+  color: #e91e63;
+  font-size: 1.5rem;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.back-btn,
+.confirm-btn {
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.back-btn {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.back-btn:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
+  color: white;
+}
+
+.confirm-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
+.back-btn:disabled,
+.confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .confirm-order-container {
+    padding: 1rem;
+  }
+
+  .confirm-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .confirm-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .confirm-section {
+    padding: 1.5rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .confirm-order-item img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .confirm-actions {
+    flex-direction: column;
+  }
+
+  .back-btn,
+  .confirm-btn {
+    width: 100%;
+  }
+}
