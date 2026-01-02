@@ -1,30 +1,79 @@
 import React, { useState, useEffect } from "react";
 
 import { useCart } from "../context/CartContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import "./Order.css";
 // import axios from "axios"; // Uncomment when integrating with API
 import Toast from "../components/common/Toast";
 import { useAuth } from "../hooks/useAuth";
 import authService from "../api/authService";
+import axios from "axios";
+
+// Maximum total quantity allowed per order
+const MAX_ORDER_QUANTITY = 15;
 
 const Order = () => {
   const { user } = useAuth();
   const { cart, totalValue } = useCart();
   const navigate = useNavigate();
-  const [recipientType, setRecipientType] = useState("self"); // "self" | "other"
-  const [deliveryMethod, setDeliveryMethod] = useState("shipping"); // "shipping" | "pickup"
-  const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    address: "",
-    email: "",
-    note: "",
-    senderName: "",
-  });
+  const location = useLocation();
+
+  // Check if returning from confirmation page with saved data
+  const savedOrderData = location.state;
+
+  const [recipientType, setRecipientType] = useState(
+    savedOrderData?.recipientType || "self"
+  );
+  const [deliveryMethod, setDeliveryMethod] = useState(
+    savedOrderData?.deliveryMethod || "shipping"
+  );
+  const [formData, setFormData] = useState(
+    savedOrderData?.formData || {
+      fullName: "",
+      phone: "",
+      address: "",
+      email: "",
+      note: "",
+      senderName: "",
+      deliveryDate: "",
+      deliveryTime: "",
+    }
+  );
 
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState(
+    savedOrderData?.paymentMethod || "cod"
+  );
+
+  // State for selected items and their quantities
+  const [selectedItems, setSelectedItems] = useState(() => {
+    // Restore from saved data if available
+    if (savedOrderData?.selectedItems) {
+      return savedOrderData.selectedItems;
+    }
+    // Otherwise initialize with all items selected
+    const selected = {};
+    cart.forEach((item) => {
+      const itemId = item.id || item.flowerId;
+      selected[itemId] = true;
+    });
+    return selected;
+  });
+
+  const [itemQuantities, setItemQuantities] = useState(() => {
+    // Restore from saved data if available
+    if (savedOrderData?.itemQuantities) {
+      return savedOrderData.itemQuantities;
+    }
+    // Otherwise initialize with cart quantities
+    const quantities = {};
+    cart.forEach((item) => {
+      const itemId = item.id || item.flowerId;
+      quantities[itemId] = item.quantity;
+    });
+    return quantities;
+  });
 
   // Fetch profile logic
   const fetchProfileData = async () => {
@@ -65,10 +114,16 @@ const Order = () => {
 
   // Initial fetch and update when user/recipientType changes
   useEffect(() => {
-    if (user && recipientType === "self") {
+    // Only fetch if not returning from confirmation page
+    if (user && recipientType === "self" && !savedOrderData) {
       fetchProfileData();
     }
   }, [user, recipientType]);
+
+  // Scroll to top when component mounts or when returning from confirmation
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const handleRecipientChange = (e) => {
     const type = e.target.value;
@@ -96,11 +151,73 @@ const Order = () => {
     });
   };
 
-  const [paymentMethod, setPaymentMethod] = useState("cod"); // "cod" | "banking"
-
   const handlePaymentChange = (e) => {
     setPaymentMethod(e.target.value);
   };
+
+  // Handle checkbox toggle
+  const handleItemToggle = (itemId) => {
+    setSelectedItems((prev) => ({
+      ...prev,
+      [itemId]: !prev[itemId],
+    }));
+  };
+
+  // Handle quantity increase
+  const handleIncreaseQuantity = (itemId) => {
+    // Calculate current total quantity
+    const currentTotal = Object.entries(itemQuantities).reduce(
+      (total, [id, qty]) => {
+        if (selectedItems[id]) {
+          return total + qty;
+        }
+        return total;
+      },
+      0
+    );
+
+    // Check if increasing would exceed limit
+    if (currentTotal >= MAX_ORDER_QUANTITY) {
+      setToast({
+        type: "error",
+        message: `Tổng số lượng không được vượt quá ${MAX_ORDER_QUANTITY} sản phẩm. Vui lòng liên hệ trực tiếp cửa hàng qua SĐT 0788580223 để đặt số lượng lớn hơn.`,
+      });
+      return;
+    }
+
+    setItemQuantities((prev) => ({
+      ...prev,
+      [itemId]: (prev[itemId] || 1) + 1,
+    }));
+  };
+
+  // Handle quantity decrease
+  const handleDecreaseQuantity = (itemId) => {
+    setItemQuantities((prev) => {
+      const currentQty = prev[itemId] || 1;
+      if (currentQty > 1) {
+        return {
+          ...prev,
+          [itemId]: currentQty - 1,
+        };
+      }
+      return prev;
+    });
+  };
+
+  // Calculate total for selected items
+  const calculateSelectedTotal = () => {
+    return cart.reduce((total, item) => {
+      const itemId = item.id || item.flowerId;
+      if (selectedItems[itemId]) {
+        const quantity = itemQuantities[itemId] || item.quantity;
+        return total + item.price * quantity;
+      }
+      return total;
+    }, 0);
+  };
+
+  const selectedTotal = calculateSelectedTotal();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -112,32 +229,88 @@ const Order = () => {
       return;
     }
 
-    if (cart.length === 0) {
-      setToast({ type: "error", message: "Giỏ hàng của bạn đang trống!" });
+    if (!formData.deliveryDate || !formData.deliveryTime) {
+      setToast({
+        type: "error",
+        message: "Vui lòng chọn ngày và giờ nhận hàng!",
+      });
       return;
     }
 
-    setLoading(true);
+    // Validate delivery time is at least 2 hours from now
+    const selectedDateTime = new Date(
+      `${formData.deliveryDate}T${formData.deliveryTime}`
+    );
+    const currentDateTime = new Date();
+    const twoHoursFromNow = new Date(
+      currentDateTime.getTime() + 2 * 60 * 60 * 1000
+    );
 
-    // Mock API call for now
-    try {
-      // TODO: Replace with actual API call
-      // const response = await axios.post("/api/orders", {
-      //     items: cart,
-      //     shippingInfo: formData,
-      //     total: totalValue
-      // });
-
-      // Simulating delay
-      setTimeout(() => {
-        setToast({ type: "success", message: "Đặt hàng thành công!" });
-        setLoading(false);
-        // navigate("/order-success"); // Or redirect to history
-      }, 1500);
-    } catch (error) {
-      setToast({ type: "error", message: "Có lỗi xảy ra, vui lòng thử lại." });
-      setLoading(false);
+    if (selectedDateTime < twoHoursFromNow) {
+      setToast({
+        type: "error",
+        message:
+          "Thời gian giao hàng phải ít nhất 2 tiếng kể từ bây giờ! Nếu cần bạn có thể liên hệ trực tiếp đến cửa hàng qua SĐT 0788580223",
+      });
+      return;
     }
+
+    // Check if any items are selected
+    const hasSelectedItems = Object.values(selectedItems).some(
+      (selected) => selected
+    );
+    if (!hasSelectedItems) {
+      setToast({
+        type: "error",
+        message: "Vui lòng chọn ít nhất một sản phẩm!",
+      });
+      return;
+    }
+
+    // Filter selected items with updated quantities
+    const selectedCartItems = cart
+      .filter((item) => {
+        const itemId = item.id || item.flowerId;
+        return selectedItems[itemId];
+      })
+      .map((item) => {
+        const itemId = item.id || item.flowerId;
+        return {
+          ...item,
+          quantity: itemQuantities[itemId] || item.quantity,
+        };
+      });
+
+    // Calculate total quantity of selected items
+    const totalQuantity = selectedCartItems.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
+
+    // Check if total quantity exceeds limit
+    if (totalQuantity > MAX_ORDER_QUANTITY) {
+      setToast({
+        type: "error",
+        message: `Tổng số lượng không được vượt quá ${MAX_ORDER_QUANTITY} sản phẩm. Vui lòng liên hệ trực tiếp cửa hàng qua SĐT 0788580223 để đặt số lượng lớn hơn.`,
+      });
+      return;
+    }
+
+    // Navigate to confirmation page with selected items
+    navigate("/confirm-order", {
+      state: {
+        orderData: {
+          formData,
+          paymentMethod,
+          deliveryMethod,
+          recipientType,
+          selectedCartItems,
+          selectedTotal,
+          selectedItems,
+          itemQuantities,
+        },
+      },
+    });
   };
 
   if (cart.length === 0) {
@@ -157,7 +330,7 @@ const Order = () => {
 
   return (
     <div className="order-container">
-      <h1 className="order-title">Thanh toán</h1>
+      <h1 className="order-title">Tạo đơn hàng</h1>
 
       <div className="order-content">
         {/* Left Column: Shipping Info */}
@@ -321,6 +494,33 @@ const Order = () => {
             )}
 
             <div className="form-group">
+              <label>
+                Ngày {deliveryMethod === "pickup" ? "nhận" : "giao"} hàng
+              </label>
+              <input
+                type="date"
+                name="deliveryDate"
+                value={formData.deliveryDate}
+                onChange={handleChange}
+                min={new Date().toISOString().split("T")[0]}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>
+                Giờ {deliveryMethod === "pickup" ? "nhận" : "giao"} hàng
+              </label>
+              <input
+                type="time"
+                name="deliveryTime"
+                value={formData.deliveryTime}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
               <label>Ghi chú đơn hàng (Tùy chọn)</label>
               <textarea
                 name="note"
@@ -403,24 +603,54 @@ const Order = () => {
         <div className="order-summary-section">
           <div className="summary-header">
             <h2 className="section-title">Đơn hàng của bạn</h2>
-            <Link to="/cart" className="edit-cart-link">
+            {/* <Link to="/cart" className="edit-cart-link">
               Chỉnh sửa đơn hàng
-            </Link>
+            </Link> */}
           </div>
           <div className="order-items">
             {cart.map((item) => {
               const itemId = item.id || item.flowerId;
+              const quantity = itemQuantities[itemId] || item.quantity;
+              const isSelected = selectedItems[itemId];
+
               return (
-                <div key={itemId} className="order-item">
+                <div
+                  key={itemId}
+                  className={`order-item ${!isSelected ? "unselected" : ""}`}
+                >
+                  <input
+                    type="checkbox"
+                    className="item-checkbox"
+                    checked={isSelected || false}
+                    onChange={() => handleItemToggle(itemId)}
+                  />
                   <div className="item-info">
                     <img src={item.imageUrl} alt={item.flowerName} />
                     <div className="item-details">
                       <h4>{item.flowerName}</h4>
-                      <p>x {item.quantity}</p>
+                      <div className="quantity-controls">
+                        <button
+                          type="button"
+                          className="qty-btn"
+                          onClick={() => handleDecreaseQuantity(itemId)}
+                          disabled={!isSelected || quantity <= 1}
+                        >
+                          −
+                        </button>
+                        <span className="quantity-display">{quantity}</span>
+                        <button
+                          type="button"
+                          className="qty-btn"
+                          onClick={() => handleIncreaseQuantity(itemId)}
+                          disabled={!isSelected}
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <div className="item-price">
-                    {(item.price * item.quantity).toLocaleString()}₫
+                    {(item.price * quantity).toLocaleString()}₫
                   </div>
                 </div>
               );
@@ -430,7 +660,7 @@ const Order = () => {
           <div className="order-totals">
             <div className="total-row">
               <span>Tạm tính</span>
-              <span>{totalValue.toLocaleString()}₫</span>
+              <span>{selectedTotal.toLocaleString()}₫</span>
             </div>
             <div className="total-row">
               <span>Phí vận chuyển</span>
@@ -439,7 +669,7 @@ const Order = () => {
             <div className="total-row final">
               <span>Tổng cộng</span>
               <span className="total-price">
-                {totalValue.toLocaleString()}₫
+                {selectedTotal.toLocaleString()}₫
               </span>
             </div>
           </div>
