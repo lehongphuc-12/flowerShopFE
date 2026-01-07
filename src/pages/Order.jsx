@@ -603,9 +603,7 @@ const Order = () => {
         <div className="order-summary-section">
           <div className="summary-header">
             <h2 className="section-title">Đơn hàng của bạn</h2>
-            {/* <Link to="/cart" className="edit-cart-link">
-              Chỉnh sửa đơn hàng
-            </Link> */}
+            
           </div>
           <div className="order-items">
             {cart.map((item) => {
